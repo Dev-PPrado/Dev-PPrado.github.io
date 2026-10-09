@@ -1,0 +1,53 @@
+[
+  {
+    "id": "git-github",
+    "titulo": "Git e GitHub (Jornada de Dados)",
+    "itens": ["Git", "GitHub"],
+    "status": "concluído",
+    "fim": "2026-08",
+    "link": "https://suajornadadedados.curseduca.pro/verify/e4f1255369976e643c535b79b23259c24b3f3d39"
+  },
+  {
+    "id": "imersao-databricks",
+    "titulo": "Imersão Databricks + Claude Code (Jornada de Dados, 8h)",
+    "itens": ["Databricks", "Unity Catalog", "Delta Lake e arquitetura medallion", "MLflow", "Claude Code"],
+    "status": "concluído",
+    "fim": "2026-08"
+  },
+  {
+    "id": "trilha-python",
+    "titulo": "Trilha Python (Jornada de Dados)",
+    "itens": ["Python"],
+    "status": "concluído",
+    "fim": "2026-09",
+    "link": "https://suajornadadedados.curseduca.pro/verify/50daf2096d8d66fd948b053ab83c1b5b334d200b"
+  },
+  {
+    "id": "trilha-sql",
+    "titulo": "Trilha SQL (Jornada de Dados)",
+    "itens": ["SQL"],
+    "status": "concluído",
+    "fim": "2026-09",
+    "link": "https://suajornadadedados.curseduca.pro/verify/9ee0c36b2201e926750ba13b9bf14cf3a28bbd29"
+  },
+  {
+    "id": "workshop-dbt",
+    "titulo": "Workshop dbt (Jornada de Dados)",
+    "itens": ["dbt"],
+    "status": "concluído",
+    "fim": "2026-09",
+    "link": "https://suajornadadedados.curseduca.pro/verify/ecac5ead05113b6a19187e8ac293d22bd7145e74"
+  },
+  {
+    "id": "modelagem-e-governanca",
+    "titulo": "Modelagem, bancos e governança",
+    "itens": ["Modelagem de dados", "Bancos relacionais e NoSQL", "Governança de dados"],
+    "status": "planejado"
+  },
+  {
+    "id": "spark-cicd-cloud",
+    "titulo": "Spark, CI/CD e cloud",
+    "itens": ["Apache Spark / PySpark", "CI/CD", "AWS"],
+    "status": "planejado"
+  }
+]
