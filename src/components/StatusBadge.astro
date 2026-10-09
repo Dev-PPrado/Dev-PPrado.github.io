@@ -1,0 +1,21 @@
+---
+// Cores por status, com contraste AA nos dois temas.
+const cores = {
+  profissional: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-100',
+  projetos: 'bg-sky-100 text-sky-900 dark:bg-sky-900/50 dark:text-sky-100',
+  estudando: 'bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-100',
+  próximo: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
+  concluído: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-100',
+  'em andamento': 'bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-100',
+  planejado: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
+} as const;
+
+interface Props {
+  status: keyof typeof cores;
+  label: string;
+}
+
+const { status, label } = Astro.props;
+---
+
+<span class:list={['inline-block rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap', cores[status]]}>{label}</span>

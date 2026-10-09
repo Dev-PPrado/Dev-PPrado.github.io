@@ -57,4 +57,17 @@ const roadmap = defineCollection({
     }),
 });
 
-export const collections = { projects, stack, roadmap };
+// Um único arquivo: frontmatter alimenta o Hero, o corpo vira a seção "Sobre".
+// Texto coerente com Career Engineering/linkedin/perfil_atual.md.
+const perfil = defineCollection({
+  loader: glob({ pattern: 'perfil.md', base: './src/content' }),
+  schema: z.object({
+    nome: z.string().min(1),
+    cargo: z.string().min(1),
+    chamada: z.string().min(1),
+    github: z.url(),
+    linkedin: z.url(),
+  }),
+});
+
+export const collections = { projects, stack, roadmap, perfil };

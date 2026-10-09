@@ -1,0 +1,45 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import type { CollectionEntry } from 'astro:content';
+import { pt } from '../i18n/pt';
+
+interface Props {
+  perfil: CollectionEntry<'perfil'>['data'];
+}
+
+const { perfil } = Astro.props;
+// O link do CV só aparece quando public/cv.pdf existir (Fase 5).
+const temCv = existsSync(join(process.cwd(), 'public', 'cv.pdf'));
+
+const links = [
+  { href: perfil.github, label: 'GitHub' },
+  { href: perfil.linkedin, label: 'LinkedIn' },
+  ...(temCv ? [{ href: '/cv.pdf', label: pt.hero.cv }] : []),
+];
+---
+
+<section aria-labelledby="hero-titulo" class="mx-auto max-w-5xl px-4 pt-16 pb-12 sm:pt-24">
+	<p class="text-sm font-semibold tracking-wide text-sky-700 uppercase dark:text-sky-300">{perfil.cargo}</p>
+	<h1 id="hero-titulo" class="mt-2 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
+		{perfil.nome}
+	</h1>
+	<p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">{perfil.chamada}</p>
+	<ul class="mt-8 flex flex-wrap gap-3">
+		{links.map((link, i) => (
+			<li>
+				<a
+					href={link.href}
+					class:list={[
+						'inline-block rounded-md px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600',
+						i === 0
+							? 'bg-sky-700 text-white hover:bg-sky-800 dark:bg-sky-600 dark:hover:bg-sky-500'
+							: 'border border-slate-300 text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800',
+					]}
+				>
+					{link.label}
+				</a>
+			</li>
+		))}
+	</ul>
+</section>

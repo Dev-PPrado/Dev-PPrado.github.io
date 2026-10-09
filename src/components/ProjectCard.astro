@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pt } from '../i18n/pt';
+import { formatMes } from '../lib/format';
+
+interface Props {
+  projeto: CollectionEntry<'projects'>;
+}
+
+const { data } = Astro.props.projeto;
+---
+
+<article class="flex flex-col rounded-lg border border-slate-200 p-5 dark:border-slate-800">
+	<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+		<span>{formatMes(data.data)}</span>
+		<span aria-hidden="true">·</span>
+		<span>{pt.projetos.status[data.status]}</span>
+	</div>
+	<h3 class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">{data.titulo}</h3>
+	<p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{data.resumo}</p>
+	<dl class="mt-4 space-y-3 text-sm">
+		<div>
+			<dt class="font-medium text-slate-900 dark:text-white">{pt.projetos.problema}</dt>
+			<dd class="mt-1 text-slate-600 dark:text-slate-300">{data.problema}</dd>
+		</div>
+		<div>
+			<dt class="font-medium text-slate-900 dark:text-white">{pt.projetos.solucao}</dt>
+			<dd class="mt-1 text-slate-600 dark:text-slate-300">{data.solucao}</dd>
+		</div>
+	</dl>
+	<ul class="mt-4 flex flex-wrap gap-2" aria-label="Tecnologias">
+		{data.stack.map((tec) => (
+			<li class="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-200">{tec}</li>
+		))}
+	</ul>
+	<a
+		href={data.repo}
+		class="mt-auto self-start rounded pt-5 text-sm font-medium text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
+	>
+		{pt.projetos.repo}<span class="sr-only">: {data.titulo}</span>{' '}<span aria-hidden="true">→</span>
+	</a>
+</article>

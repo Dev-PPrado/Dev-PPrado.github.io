@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+/* Tema escuro controlado pela classe .dark no <html> (definida no Layout a partir
+   da preferência salva ou do sistema). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

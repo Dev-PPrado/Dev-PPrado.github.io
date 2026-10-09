@@ -1,11 +1,54 @@
 ---
+import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import StackPanel from '../components/StackPanel.astro';
+import Timeline from '../components/Timeline.astro';
 import { pt } from '../i18n/pt';
+
+const perfil = await getEntry('perfil', 'perfil');
+if (!perfil) throw new Error('src/content/perfil.md não encontrado');
+const { Content: Sobre } = await render(perfil);
+
+const destaques = (await getCollection('projects', ({ data }) => data.destaque)).sort((a, b) =>
+  b.data.data.localeCompare(a.data.data),
+);
+const stack = await getCollection('stack');
+const roadmap = await getCollection('roadmap');
 ---
 
 <Layout>
-	<main class="mx-auto max-w-3xl px-4 py-24">
-		<h1 class="text-4xl font-bold">Pedro Prado</h1>
-		<p class="mt-2 text-xl text-slate-600 dark:text-slate-400">{pt.role}</p>
-	</main>
+	<Hero perfil={perfil.data} />
+
+	<Section id="projetos" titulo={pt.projetos.titulo}>
+		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+			{destaques.map((projeto) => <ProjectCard projeto={projeto} />)}
+		</div>
+	</Section>
+
+	<Section id="stack" titulo={pt.stack.titulo} descricao={pt.stack.descricao}>
+		<StackPanel itens={stack} />
+	</Section>
+
+	<Section id="evolucao" titulo={pt.evolucao.titulo} descricao={pt.evolucao.descricao}>
+		<Timeline etapas={roadmap} />
+	</Section>
+
+	<Section id="sobre" titulo={pt.sobre.titulo}>
+		<div class="max-w-2xl space-y-4 leading-relaxed text-slate-700 dark:text-slate-300">
+			<Sobre />
+		</div>
+		<h3 class="mt-8 font-semibold text-slate-900 dark:text-white">{pt.sobre.contato}</h3>
+		<p class="mt-2 text-slate-600 dark:text-slate-300">
+			{pt.sobre.contatoTexto}{' '}
+			<a
+				href={perfil.data.linkedin}
+				class="rounded font-medium text-sky-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
+			>
+				LinkedIn
+			</a>
+		</p>
+	</Section>
 </Layout>

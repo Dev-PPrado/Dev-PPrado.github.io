@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { pt } from '../i18n/pt';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   title?: string;
@@ -8,6 +9,13 @@ interface Props {
 }
 
 const { title = pt.siteTitle, description = pt.siteDescription } = Astro.props;
+
+const nav = [
+  { href: '/#projetos', label: pt.nav.projetos },
+  { href: '/#stack', label: pt.nav.stack },
+  { href: '/#evolucao', label: pt.nav.evolucao },
+  { href: '/#sobre', label: pt.nav.sobre },
+];
 ---
 
 <html lang={pt.lang}>
@@ -15,12 +23,54 @@ const { title = pt.siteTitle, description = pt.siteDescription } = Astro.props;
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<script is:inline>
+			// Aplica o tema antes da pintura para evitar flash de tema errado.
+			(() => {
+				let tema = null;
+				try { tema = localStorage.getItem('tema'); } catch {}
+				const escuro = tema ? tema === 'escuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+				document.documentElement.classList.toggle('dark', escuro);
+			})();
+		</script>
 	</head>
-	<body class="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-		<slot />
+	<body class="min-h-screen bg-white text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200">
+		<a
+			href="#conteudo"
+			class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-sky-700 focus:px-4 focus:py-2 focus:text-white"
+		>
+			{pt.skipToContent}
+		</a>
+		<header class="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
+			<div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
+				<a href="/" class="font-semibold text-slate-900 dark:text-white">Pedro Prado</a>
+				<div class="flex items-center gap-1 sm:gap-4">
+					<nav aria-label="Seções" class="hidden sm:block">
+						<ul class="flex gap-4 text-sm">
+							{nav.map((item) => (
+								<li>
+									<a
+										href={item.href}
+										class="rounded text-slate-600 hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-slate-300 dark:hover:text-sky-300"
+									>
+										{item.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+					<ThemeToggle />
+				</div>
+			</div>
+		</header>
+		<main id="conteudo">
+			<slot />
+		</main>
+		<footer class="border-t border-slate-200 dark:border-slate-800">
+			<p class="mx-auto max-w-5xl px-4 py-6 text-sm text-slate-500 dark:text-slate-400">{pt.rodape}</p>
+		</footer>
 	</body>
 </html>
