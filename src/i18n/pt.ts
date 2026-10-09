@@ -22,6 +22,18 @@ export const pt = {
     problema: 'Problema',
     solucao: 'Solução',
     repo: 'Ver repositório',
+    detalhes: 'Ver detalhes',
+    todos: 'Ver todos os projetos',
+    voltar: 'Todos os projetos',
+    stack: 'Tecnologias',
+    indice: {
+      titulo: 'Projetos',
+      descricao: 'Todos os projetos publicados no meu GitHub. Filtre por tecnologia.',
+      filtro: 'Filtrar por tecnologia',
+      todas: 'Todas',
+      vazio: 'Nenhum projeto usa essa tecnologia.',
+      contagem: (n: number) => (n === 1 ? '1 projeto' : `${n} projetos`),
+    },
     status: {
       'em desenvolvimento': 'Em desenvolvimento',
       concluído: 'Concluído',

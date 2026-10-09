@@ -3,13 +3,15 @@ interface Props {
   id: string;
   titulo: string;
   descricao?: string;
+  // h1 quando a seção é o conteúdo principal da página (ex.: /projetos).
+  nivel?: 'h1' | 'h2';
 }
 
-const { id, titulo, descricao } = Astro.props;
+const { id, titulo, descricao, nivel: Titulo = 'h2' } = Astro.props;
 ---
 
 <section id={id} aria-labelledby={`${id}-titulo`} class="mx-auto max-w-5xl scroll-mt-16 px-4 py-12">
-	<h2 id={`${id}-titulo`} class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{titulo}</h2>
+	<Titulo id={`${id}-titulo`} class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{titulo}</Titulo>
 	{descricao && <p class="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">{descricao}</p>}
 	<div class="mt-6">
 		<slot />

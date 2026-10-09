@@ -3,7 +3,7 @@ titulo: Dashboard da Copa do Mundo (1930–2014)
 resumo: Dashboard em Streamlit que carrega, limpa e modela dados históricos das Copas do Mundo com pandas e apresenta KPIs, filtros e gráficos Plotly.
 problema: Os CSVs públicos das Copas têm linhas vazias, duplicadas, nomes de seleções inconsistentes e eventos de jogadores codificados em texto, o que impede análise direta.
 solucao: Uma camada de carga e limpeza em pandas remove vazios e duplicados, padroniza nomes de seleções, mapeia fases do torneio e extrai eventos (gols, cartões) do texto. Uma transformação gera a visão por seleção e jogo, consumida por um dashboard Streamlit com filtros globais e abas de análise.
-stack: [Python, pandas, Streamlit, Plotly]
+stack: [Python, Pandas, Streamlit, Plotly]
 repo: https://github.com/Dev-PPrado/WorldCup
 data: 2026-10
 destaque: false
@@ -21,4 +21,9 @@ flowchart LR
 
 ## O que aprendi
 
-TODO: preencher com o Pedro.
+[//]: # (Texto provisório e genérico; revisar com o Pedro.)
+
+- Limpar dados reais com Pandas: remover linhas vazias e duplicadas e padronizar nomes inconsistentes.
+- Extrair informação estruturada de campos de texto, como os eventos de gols e cartões.
+- Separar a etapa de limpeza da etapa de transformação antes de chegar à visualização.
+- Montar um dashboard simples com Streamlit e Plotly, com filtros e KPIs.

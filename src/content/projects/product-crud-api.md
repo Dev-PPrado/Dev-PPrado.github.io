@@ -22,4 +22,9 @@ Projeto desenvolvido durante a formação Jornada de Dados.
 
 ## O que aprendi
 
-TODO: preencher com o Pedro.
+[//]: # (Texto provisório e genérico; revisar com o Pedro.)
+
+- Construir uma API REST com FastAPI e entender como cada operação do CRUD vira um endpoint.
+- Validar a entrada com schemas Pydantic, recusando dados inválidos antes de chegar ao banco.
+- Acessar o PostgreSQL pelo SQLAlchemy, separando a camada de dados da camada da API.
+- Conectar vários serviços (banco, API e front-end Streamlit) na mesma rede do Docker Compose.

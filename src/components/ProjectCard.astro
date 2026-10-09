@@ -2,12 +2,14 @@
 import type { CollectionEntry } from 'astro:content';
 import { pt } from '../i18n/pt';
 import { formatMes } from '../lib/format';
+import { urlProjeto } from '../lib/projetos';
 
 interface Props {
   projeto: CollectionEntry<'projects'>;
 }
 
-const { data } = Astro.props.projeto;
+const { projeto } = Astro.props;
+const { data } = projeto;
 ---
 
 <article class="flex flex-col rounded-lg border border-slate-200 p-5 dark:border-slate-800">
@@ -16,7 +18,11 @@ const { data } = Astro.props.projeto;
 		<span aria-hidden="true">·</span>
 		<span>{pt.projetos.status[data.status]}</span>
 	</div>
-	<h3 class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">{data.titulo}</h3>
+	<h3 class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">
+		<a href={urlProjeto(projeto)} class="rounded hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-sky-600 dark:hover:text-sky-300">
+			{data.titulo}
+		</a>
+	</h3>
 	<p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{data.resumo}</p>
 	<dl class="mt-4 space-y-3 text-sm">
 		<div>
@@ -33,10 +39,18 @@ const { data } = Astro.props.projeto;
 			<li class="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-200">{tec}</li>
 		))}
 	</ul>
-	<a
-		href={data.repo}
-		class="mt-auto self-start rounded pt-5 text-sm font-medium text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
-	>
-		{pt.projetos.repo}<span class="sr-only">: {data.titulo}</span>{' '}<span aria-hidden="true">→</span>
-	</a>
+	<div class="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-5 text-sm font-medium">
+		<a
+			href={urlProjeto(projeto)}
+			class="rounded text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
+		>
+			{pt.projetos.detalhes}<span class="sr-only">: {data.titulo}</span>{' '}<span aria-hidden="true">→</span>
+		</a>
+		<a
+			href={data.repo}
+			class="rounded text-slate-600 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-slate-300"
+		>
+			{pt.projetos.repo}<span class="sr-only">: {data.titulo}</span>
+		</a>
+	</div>
 </article>

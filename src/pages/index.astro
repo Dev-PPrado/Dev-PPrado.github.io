@@ -7,14 +7,13 @@ import ProjectCard from '../components/ProjectCard.astro';
 import StackPanel from '../components/StackPanel.astro';
 import Timeline from '../components/Timeline.astro';
 import { pt } from '../i18n/pt';
+import { ordenarPorData } from '../lib/projetos';
 
 const perfil = await getEntry('perfil', 'perfil');
 if (!perfil) throw new Error('src/content/perfil.md não encontrado');
 const { Content: Sobre } = await render(perfil);
 
-const destaques = (await getCollection('projects', ({ data }) => data.destaque)).sort((a, b) =>
-  b.data.data.localeCompare(a.data.data),
-);
+const destaques = ordenarPorData(await getCollection('projects', ({ data }) => data.destaque));
 const stack = await getCollection('stack');
 const roadmap = await getCollection('roadmap');
 ---
@@ -26,6 +25,12 @@ const roadmap = await getCollection('roadmap');
 		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{destaques.map((projeto) => <ProjectCard projeto={projeto} />)}
 		</div>
+		<a
+			href="/projetos/"
+			class="mt-8 inline-block rounded text-sm font-medium text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
+		>
+			{pt.projetos.todos} <span aria-hidden="true">→</span>
+		</a>
 	</Section>
 
 	<Section id="stack" titulo={pt.stack.titulo} descricao={pt.stack.descricao}>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* Tema escuro controlado pela classe .dark no <html> (definida no Layout a partir
    da preferência salva ou do sistema). */

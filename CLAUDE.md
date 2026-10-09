@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal portfolio for Pedro Prado, positioned as **Data Engineer**. It is deployed to GitHub Pages at `dev-pprado.github.io` from the repo `Dev-PPrado.github.io`. The source of truth for scope, section order, schemas, and the phased plan is `.llm/prd.md`. Read it before starting any phase. Site content is in Brazilian Portuguese only. Fixed UI strings live in `src/i18n/pt.ts`, so English can be added later without touching components.
 
-Phases 0 to 2 are done. The next phase is Fase 3 (project pages). Until then, project cards link to the GitHub repo. `roadmap.json` is filled from the certificates. The "O que aprendi" sections in the project files are still TODO for Pedro.
+Phases 0 to 3 are done. The next phase is Fase 4 (GitHub stats pipeline). Project cards link to `/projetos/<id>/` and to the repo. `roadmap.json` is filled from the certificates. The "O que aprendi" sections hold a provisional, generic text (marked with a `[//]: # (...)` Markdown comment, which is not rendered) until Pedro writes his own.
 
 ## Content and honesty rules
 
@@ -24,7 +24,9 @@ Phases 0 to 2 are done. The next phase is Fase 3 (project pages). Until then, pr
 - **Layout:** `src/layouts/Layout.astro` is the base for every page. It sets `lang`, the meta tags, the global CSS, the sticky header with section nav, and the skip link.
 - **Theme:** dark mode is class-based (`@custom-variant dark` in `global.css`). An inline script in the layout's `<head>` sets `.dark` from `localStorage.tema`, falling back to the system preference, and `ThemeToggle.astro` flips it.
 - **Home (`src/pages/index.astro`):** composes `Hero`, then `Section`-wrapped `ProjectCard` (only `destaque: true`), `StackPanel`, `Timeline`, and "Sobre". `StatusBadge` holds the status colors shared by stack and roadmap. Dates go through `formatMes` in `src/lib/format.ts`.
-- **CV link:** the Hero shows it only when `public/cv.pdf` exists at build time.
+- **Project pages:** `src/pages/projetos/[slug].astro` renders one page per `.md` (slug = entry `id`). `src/pages/projetos/index.astro` lists all projects with a client-side technology filter (synced to `?tec=`; hidden without JS, so every project still shows). Shared helpers (sorting, URLs, tech keys) are in `src/lib/projetos.ts`. Tech keys are case-insensitive. The Markdown body is styled with `@tailwindcss/typography` (`prose`).
+- **Mermaid:** `astro.config.mjs` excludes `mermaid` from Shiki, so blocks render as `<pre><code class="language-mermaid">`. `src/scripts/mermaid.ts` is imported only by `[slug].astro`, uses an IntersectionObserver to `import('mermaid')` on demand, and re-renders on theme change.
+- **CV link:** the Hero shows it only when `public/cv.pdf` exists at build time. `public/cv.pdf` is the public version without the phone number, generated from `../certificados/CV_web.html` (print to PDF with Edge or Chrome headless).
 - **Collections:** all defined with Zod (`astro/zod`, Zod 4) in `src/content.config.ts`. A missing or invalid field fails `npm run build`.
   - `projects`: a glob over `src/content/projects/*.md`. Frontmatter keys are in Portuguese (`titulo`, `resumo`, `problema`, `solucao`, `stack`, `repo`, `data`, `destaque`, `status`, `imagem?`).
   - `perfil`: the single file `src/content/perfil.md`. Its frontmatter feeds the Hero, and its body is the "Sobre" section. Keep it consistent with `Career Engineering/linkedin/perfil_atual.md`.

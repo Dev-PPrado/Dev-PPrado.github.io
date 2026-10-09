@@ -24,7 +24,12 @@ Projeto de estudo construído a partir do tutorial da VBLUUIZA e evoluído a par
 
 ## O que aprendi
 
-TODO: preencher com o Pedro.
+[//]: # (Texto provisório e genérico; revisar com o Pedro.)
+
+- Organizar um pipeline nas etapas de extract, transform e load, cada uma com uma responsabilidade.
+- Criar uma DAG no Airflow, agendar a execução e acompanhar as tarefas pela interface.
+- Normalizar um JSON aninhado com Pandas e entender quando vale gravar um arquivo intermediário em Parquet.
+- Carregar dados no PostgreSQL com SQLAlchemy e subir todos os serviços juntos com Docker Compose.
 
 ## Próximos passos
 

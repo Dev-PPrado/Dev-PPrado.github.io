@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { pt } from '../../i18n/pt';
+import { chaveTec, ordenarPorData, tecnologias } from '../../lib/projetos';
+
+const projetos = ordenarPorData(await getCollection('projects'));
+const tecs = tecnologias(projetos);
+const t = pt.projetos.indice;
+
+const botao =
+  'rounded-full border px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 ' +
+  'border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 ' +
+  'aria-pressed:border-sky-700 aria-pressed:bg-sky-700 aria-pressed:text-white dark:aria-pressed:border-sky-600 dark:aria-pressed:bg-sky-600';
+---
+
+<Layout title={`${t.titulo} | Pedro Prado`} description={t.descricao}>
+	<Section id="projetos" nivel="h1" titulo={t.titulo} descricao={t.descricao}>
+		<!-- Sem JavaScript o filtro fica escondido e todos os projetos aparecem. -->
+		<div id="filtro" hidden>
+			<h2 id="filtro-titulo" class="sr-only">{t.filtro}</h2>
+			<ul class="flex flex-wrap gap-2" aria-labelledby="filtro-titulo">
+				<li><button type="button" class={botao} data-tec="" aria-pressed="true">{t.todas}</button></li>
+				{tecs.map((tec) => (
+					<li>
+						<button type="button" class={botao} data-tec={tec.chave} aria-pressed="false">
+							{tec.nome} <span class="opacity-75">({tec.total})</span>
+						</button>
+					</li>
+				))}
+			</ul>
+			<p id="contagem" class="mt-4 text-sm text-slate-500 dark:text-slate-400" aria-live="polite">
+				{t.contagem(projetos.length)}
+			</p>
+		</div>
+
+		<ul id="lista" class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+			{projetos.map((projeto) => (
+				<li class="grid" data-tecs={JSON.stringify(projeto.data.stack.map(chaveTec))}>
+					<ProjectCard projeto={projeto} />
+				</li>
+			))}
+		</ul>
+		<p id="vazio" class="mt-6 text-slate-600 dark:text-slate-300" hidden>{t.vazio}</p>
+	</Section>
+</Layout>
+
+<script>
+	import { pt } from '../../i18n/pt';
+
+	const filtro = document.getElementById('filtro')!;
+	const botoes = [...filtro.querySelectorAll<HTMLButtonElement>('button[data-tec]')];
+	const itens = [...document.querySelectorAll<HTMLLIElement>('#lista > li')];
+	const contagem = document.getElementById('contagem')!;
+	const vazio = document.getElementById('vazio')!;
+
+	function aplicar(tec: string) {
+		// Uma tecnologia desconhecida na URL volta para "Todas".
+		if (!botoes.some((b) => b.dataset.tec === tec)) tec = '';
+		let visiveis = 0;
+		for (const item of itens) {
+			const mostra = tec === '' || (JSON.parse(item.dataset.tecs!) as string[]).includes(tec);
+			item.hidden = !mostra;
+			if (mostra) visiveis++;
+		}
+		for (const b of botoes) b.setAttribute('aria-pressed', String(b.dataset.tec === tec));
+		contagem.textContent = pt.projetos.indice.contagem(visiveis);
+		vazio.hidden = visiveis > 0;
+
+		const url = new URL(location.href);
+		if (tec) url.searchParams.set('tec', tec);
+		else url.searchParams.delete('tec');
+		history.replaceState(null, '', url);
+	}
+
+	for (const b of botoes) b.addEventListener('click', () => aplicar(b.dataset.tec!));
+	filtro.hidden = false;
+	aplicar(new URL(location.href).searchParams.get('tec') ?? '');
+</script>
