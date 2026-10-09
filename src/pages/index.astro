@@ -6,6 +6,8 @@ import Section from '../components/Section.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import StackPanel from '../components/StackPanel.astro';
 import Timeline from '../components/Timeline.astro';
+import ActivityChart from '../components/ActivityChart.astro';
+import { githubStats } from '../lib/github-stats';
 import { pt } from '../i18n/pt';
 import { ordenarPorData } from '../lib/projetos';
 
@@ -39,6 +41,10 @@ const roadmap = await getCollection('roadmap');
 
 	<Section id="evolucao" titulo={pt.evolucao.titulo} descricao={pt.evolucao.descricao}>
 		<Timeline etapas={roadmap} />
+	</Section>
+
+	<Section id="atividade" titulo={pt.atividade.titulo} descricao={pt.atividade.descricao}>
+		<ActivityChart stats={githubStats} />
 	</Section>
 
 	<Section id="sobre" titulo={pt.sobre.titulo}>

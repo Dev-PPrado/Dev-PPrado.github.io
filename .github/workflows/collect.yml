@@ -1,0 +1,59 @@
+name: Collect GitHub stats
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # segunda-feira, 06:00 em Brasília
+  workflow_dispatch:
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - uses: astral-sh/setup-uv@v10.2.0
+
+      - name: Testes da transformação
+        run: uv run pytest tests/ -q
+
+      # Se falhar, o script sai com código 1 e o JSON anterior fica como está.
+      - name: Coleta
+        run: uv run scripts/collect_github.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # O script só regrava o arquivo quando os dados mudam, então um diff vazio = nada a publicar.
+      - name: Commit do JSON, se mudou
+        id: commit
+        run: |
+          if git diff --quiet -- src/data/github_stats.json; then
+            echo "Sem mudanças nos dados."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add src/data/github_stats.json
+            git commit -m "Atualiza estatísticas do GitHub"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  # Um push feito com GITHUB_TOKEN não dispara o deploy.yml, então ele é chamado aqui.
+  deploy:
+    needs: collect
+    if: needs.collect.outputs.changed == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy.yml

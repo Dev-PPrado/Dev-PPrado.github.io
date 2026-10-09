@@ -1,0 +1,167 @@
+---
+// Gráfico de atividade gerado no build a partir de src/data/github_stats.json.
+// SVG puro, sem biblioteca JS: o tooltip é o <title> nativo de cada coluna.
+import type { GithubStats } from '../lib/github-stats';
+import { pt } from '../i18n/pt';
+import { formatMes } from '../lib/format';
+
+interface Props {
+  stats: GithubStats;
+}
+
+const { stats } = Astro.props;
+const t = pt.atividade;
+const meses = stats.commits_por_mes;
+
+// Geometria do SVG (unidades do viewBox).
+const W = 400;
+const H = 200;
+const m = { top: 18, right: 4, bottom: 34, left: 26 };
+const plotW = W - m.left - m.right;
+const plotH = H - m.top - m.bottom;
+const banda = plotW / Math.max(meses.length, 1);
+const larguraBarra = Math.min(16, banda * 0.6);
+
+// Eixo Y com passos "redondos" (1, 2, 5, 10, 20, 50...), cerca de 4 divisões.
+const maximo = Math.max(1, ...meses.map((x) => x.commits));
+const passo = [1, 2, 5].flatMap((b) => [1, 10, 100, 1000].map((e) => b * e)).sort((a, b) => a - b).find((p) => maximo / p <= 4)!;
+const topo = Math.ceil(maximo / passo) * passo;
+const ticks = Array.from({ length: topo / passo + 1 }, (_, i) => i * passo);
+const y = (v: number) => m.top + plotH - (v / topo) * plotH;
+const base = y(0);
+
+// Coluna com topo arredondado (raio 4) e base reta.
+function coluna(x: number, altura: number): string {
+  const r = Math.min(4, altura, larguraBarra / 2);
+  const yt = base - altura;
+  return `M${x},${base}V${yt + r}Q${x},${yt} ${x + r},${yt}H${x + larguraBarra - r}Q${x + larguraBarra},${yt} ${x + larguraBarra},${yt + r}V${base}Z`;
+}
+
+const curto = new Intl.DateTimeFormat(pt.locale, { month: 'short', timeZone: 'UTC' });
+const colunas = meses.map((item, i) => {
+  const [ano, mes] = item.mes.split('-').map(Number);
+  const x0 = m.left + i * banda;
+  return {
+    ...item,
+    x0,
+    xBarra: x0 + (banda - larguraBarra) / 2,
+    altura: base - y(item.commits),
+    rotulo: curto.format(new Date(Date.UTC(ano, mes - 1, 1))).replace('.', ''),
+    ano: i === 0 || mes === 1 ? String(ano) : '',
+    extenso: formatMes(item.mes),
+  };
+});
+
+const pico = colunas.reduce((a, b) => (b.commits > a.commits ? b : a), colunas[0]);
+const resumo =
+  colunas.length > 0
+    ? t.resumoGrafico(colunas[0].extenso, colunas.at(-1)!.extenso, stats.total_commits, pico.extenso, pico.commits)
+    : '';
+
+// Linguagens: as 5 maiores e o resto somado em "Outras".
+const principais = stats.linguagens.slice(0, 5);
+const resto = stats.linguagens.slice(5);
+const linguagens = resto.length
+  ? [...principais, { nome: t.outras, bytes: 0, percentual: Math.round(resto.reduce((s, l) => s + l.percentual, 0) * 10) / 10 }]
+  : principais;
+const maiorPercentual = Math.max(1, ...linguagens.map((l) => l.percentual));
+
+const atualizado = new Intl.DateTimeFormat(pt.locale, { dateStyle: 'long', timeZone: 'America/Sao_Paulo' }).format(
+  new Date(stats.coletado_em),
+);
+const numero = new Intl.NumberFormat(pt.locale, { maximumFractionDigits: 1 });
+---
+
+<div class="grid gap-10 lg:grid-cols-[3fr_2fr]">
+	<div>
+		<dl class="flex flex-wrap gap-x-10 gap-y-4">
+			<div>
+				<dt class="text-sm text-slate-600 dark:text-slate-300">{t.commits}</dt>
+				<dd class="text-3xl font-semibold text-slate-900 dark:text-white">{stats.total_commits}</dd>
+			</div>
+			<div>
+				<dt class="text-sm text-slate-600 dark:text-slate-300">{t.repositorios}</dt>
+				<dd class="text-3xl font-semibold text-slate-900 dark:text-white">{stats.repositorios}</dd>
+			</div>
+		</dl>
+
+		<figure class="mt-8 max-w-xl">
+			<figcaption id="atividade-grafico-titulo" class="font-semibold text-slate-900 dark:text-white">{t.porMes}</figcaption>
+			<svg
+				viewBox={`0 0 ${W} ${H}`}
+				class="mt-3 w-full overflow-visible"
+				role="img"
+				aria-labelledby="atividade-grafico-titulo atividade-grafico-resumo"
+			>
+				<desc id="atividade-grafico-resumo">{resumo}</desc>
+				<g class="stroke-slate-200 dark:stroke-slate-800" stroke-width="1" shape-rendering="crispEdges">
+					{ticks.map((v) => <line x1={m.left} x2={W - m.right} y1={y(v)} y2={y(v)} />)}
+				</g>
+				<g class="fill-slate-500 dark:fill-slate-400" font-size="10" text-anchor="end" style="font-variant-numeric: tabular-nums">
+					{ticks.map((v) => <text x={m.left - 6} y={y(v)} dy="0.32em">{v}</text>)}
+				</g>
+				{colunas.map((c) => (
+					<g class="group">
+						<title>{t.tooltip(c.extenso, c.commits)}</title>
+						{/* Área de hover do tamanho da banda inteira, maior que a coluna. */}
+						<rect x={c.x0} y={m.top} width={banda} height={plotH} class="fill-transparent group-hover:fill-slate-100 dark:group-hover:fill-slate-900" />
+						{c.altura > 0 && <path d={coluna(c.xBarra, c.altura)} class="fill-sky-600" />}
+						{c.commits > 0 && (
+							<text x={c.xBarra + larguraBarra / 2} y={base - c.altura - 5} font-size="10" font-weight="600" text-anchor="middle" class="fill-slate-700 dark:fill-slate-200">
+								{c.commits}
+							</text>
+						)}
+						<text x={c.x0 + banda / 2} y={base + 14} font-size="10" text-anchor="middle" class="fill-slate-500 dark:fill-slate-400">{c.rotulo}</text>
+						{c.ano && <text x={c.x0 + banda / 2} y={base + 27} font-size="9" text-anchor="middle" class="fill-slate-500 dark:fill-slate-400">{c.ano}</text>}
+					</g>
+				))}
+			</svg>
+			<details class="mt-3 text-sm text-slate-600 dark:text-slate-300">
+				<summary class="cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-sky-600">{t.tabela}</summary>
+				<table class="mt-2 w-full max-w-xs text-left" style="font-variant-numeric: tabular-nums">
+					<thead>
+						<tr class="border-b border-slate-200 dark:border-slate-800">
+							<th scope="col" class="py-1 font-medium">{t.mes}</th>
+							<th scope="col" class="py-1 text-right font-medium">Commits</th>
+						</tr>
+					</thead>
+					<tbody>
+						{colunas.map((c) => (
+							<tr>
+								<td class="py-0.5">{c.extenso}</td>
+								<td class="py-0.5 text-right">{c.commits}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</details>
+		</figure>
+	</div>
+
+	<div>
+		<h3 class="font-semibold text-slate-900 dark:text-white">{t.linguagens}</h3>
+		<ul class="mt-4 space-y-3">
+			{linguagens.map((l) => (
+				<li>
+					<div class="flex justify-between text-sm">
+						<span class="text-slate-700 dark:text-slate-200">{l.nome}</span>
+						<span class="text-slate-500 dark:text-slate-400" style="font-variant-numeric: tabular-nums">{numero.format(l.percentual)}%</span>
+					</div>
+					<div class="mt-1 h-2" aria-hidden="true">
+						<div class="h-full rounded-r bg-sky-600" style={`width: ${(l.percentual / maiorPercentual) * 100}%; min-width: 2px`} />
+					</div>
+				</li>
+			))}
+		</ul>
+	</div>
+</div>
+
+<p class="mt-8 text-sm text-slate-500 dark:text-slate-400">
+	{t.atualizado} {atualizado}.{' '}
+	<a
+		href={`https://github.com/${stats.usuario}/Dev-PPrado.github.io/blob/main/scripts/collect_github.py`}
+		class="rounded font-medium text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
+	>
+		{t.codigo}
+	</a>
+</p>

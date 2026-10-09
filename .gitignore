@@ -27,3 +27,6 @@ pnpm-debug.log*
 .venv/
 __pycache__/
 .pytest_cache/
+
+# arquivo temporário da escrita atômica do collect_github.py
+src/data/*.tmp

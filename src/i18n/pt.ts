@@ -9,6 +9,7 @@ export const pt = {
     projetos: 'Projetos',
     stack: 'Stack',
     evolucao: 'Evolução',
+    atividade: 'Atividade',
     sobre: 'Sobre',
   },
   theme: {
@@ -70,6 +71,23 @@ export const pt = {
       'em andamento': 'Em andamento',
       planejado: 'Planejado',
     },
+  },
+  atividade: {
+    titulo: 'Atividade no GitHub',
+    descricao:
+      'Coletado toda semana da API do GitHub por um pipeline em Python (extract, transform e load) que roda no GitHub Actions e publica o site de novo quando os dados mudam.',
+    commits: 'Commits nos últimos 12 meses',
+    repositorios: 'Repositórios públicos',
+    porMes: 'Commits por mês',
+    linguagens: 'Linguagens (por volume de código)',
+    outras: 'Outras',
+    tabela: 'Ver dados em tabela',
+    mes: 'Mês',
+    atualizado: 'Dados atualizados em',
+    codigo: 'Código do pipeline',
+    resumoGrafico: (inicio: string, fim: string, total: number, pico: string, picoCommits: number) =>
+      `Commits por mês de ${inicio} a ${fim}: ${total} no total, com pico de ${picoCommits} em ${pico}.`,
+    tooltip: (mes: string, commits: number) => `${mes}: ${commits} ${commits === 1 ? 'commit' : 'commits'}`,
   },
   sobre: {
     titulo: 'Sobre',
