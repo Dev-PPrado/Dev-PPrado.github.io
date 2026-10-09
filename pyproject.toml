@@ -1,0 +1,12 @@
+[project]
+name = "dev-pprado-github-io-scripts"
+version = "0.1.0"
+description = "Scripts de dados do portfólio (coleta de estatísticas do GitHub)"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
