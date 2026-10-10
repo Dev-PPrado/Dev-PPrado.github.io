@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal portfolio for Pedro Prado, positioned as **Data Engineer**. It is deployed to GitHub Pages at `dev-pprado.github.io` from the repo `Dev-PPrado.github.io`. The source of truth for scope, section order, schemas, and the phased plan is `.llm/prd.md`. Read it before starting any phase. Site content is in Brazilian Portuguese only. Fixed UI strings live in `src/i18n/pt.ts`, so English can be added later without touching components.
 
-Phases 0 to 3 are done. Fase 4 is implemented, but its done-when check (a manual `collect.yml` run updating the JSON and the live site) needs a push. After that comes Fase 5 (SEO, Lighthouse). Project cards link to `/projetos/<id>/` and to the repo. `roadmap.json` is filled from the certificates. The "O que aprendi" sections hold a provisional, generic text (marked with a `[//]: # (...)` Markdown comment, which is not rendered) until Pedro writes his own.
+Phases 0 to 4 are done (Fase 4 verified on 2026-10-09: a manual `collect.yml` run committed new stats and redeployed the site). The next phase is Fase 5 (SEO, Lighthouse). Project cards link to `/projetos/<id>/` and to the repo. `roadmap.json` is filled from the certificates. The "O que aprendi" sections hold a provisional, generic text (marked with a `[//]: # (...)` Markdown comment, which is not rendered) until Pedro writes his own.
 
 ## Content and honesty rules
 
