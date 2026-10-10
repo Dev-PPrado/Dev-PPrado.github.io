@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dev-pprado.github.io/sitemap-index.xml

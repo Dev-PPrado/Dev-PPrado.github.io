@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal portfolio for Pedro Prado, positioned as **Data Engineer**. It is deployed to GitHub Pages at `dev-pprado.github.io` from the repo `Dev-PPrado.github.io`. The source of truth for scope, section order, schemas, and the phased plan is `.llm/prd.md`. Read it before starting any phase. Site content is in Brazilian Portuguese only. Fixed UI strings live in `src/i18n/pt.ts`, so English can be added later without touching components.
 
-Phases 0 to 4 are done (Fase 4 verified on 2026-10-09: a manual `collect.yml` run committed new stats and redeployed the site). The next phase is Fase 5 (SEO, Lighthouse). Project cards link to `/projetos/<id>/` and to the repo. `roadmap.json` is filled from the certificates. The "O que aprendi" sections hold a provisional, generic text (marked with a `[//]: # (...)` Markdown comment, which is not rendered) until Pedro writes his own.
+Phases 0 to 4 are done (Fase 4 verified on 2026-10-09: a manual `collect.yml` run committed new stats and redeployed the site). Fase 5 (SEO, Lighthouse) is implemented; Lighthouse scored 100 in all four categories locally (home, `/projetos/`, a project page, light and dark). The PRD has no phase after it. Project cards link to `/projetos/<id>/` and to the repo. `roadmap.json` is filled from the certificates. The "O que aprendi" sections hold a provisional, generic text (marked with a `[//]: # (...)` Markdown comment, which is not rendered) until Pedro writes his own.
 
 ## Content and honesty rules
 
@@ -22,6 +22,9 @@ Phases 0 to 4 are done (Fase 4 verified on 2026-10-09: a manual `collect.yml` ru
 
 - **Stack:** Astro 7 (static output), Tailwind CSS v4 (via `@tailwindcss/vite`, imported in `src/styles/global.css`), TypeScript strict.
 - **Layout:** `src/layouts/Layout.astro` is the base for every page. It sets `lang`, the meta tags, the global CSS, the sticky header with section nav, and the skip link.
+- **SEO:** the Layout emits the canonical URL (from `site` in `astro.config.mjs`), Open Graph and Twitter tags with `public/og.png`, and `theme-color`. Pages pass `title`, `description`, and `tipo` (`article` on project pages). `@astrojs/sitemap` writes `sitemap-index.xml`, and `public/robots.txt` points to it.
+- **Static images:** `public/og.png`, `public/favicon.ico`, and `public/apple-touch-icon.png` are generated from `assets-src/og.html` and `public/favicon.svg`. See `assets-src/README.md` to regenerate them.
+- **Contrast:** white text sits on `sky-700` in both themes (`sky-600` fails 4.5:1).
 - **Theme:** dark mode is class-based (`@custom-variant dark` in `global.css`). An inline script in the layout's `<head>` sets `.dark` from `localStorage.tema`, falling back to the system preference, and `ThemeToggle.astro` flips it.
 - **Home (`src/pages/index.astro`):** composes `Hero`, then `Section`-wrapped `ProjectCard` (only `destaque: true`), `StackPanel`, `Timeline`, `ActivityChart`, and "Sobre". `StatusBadge` holds the status colors shared by stack and roadmap. Dates go through `formatMes` in `src/lib/format.ts`.
 - **Project pages:** `src/pages/projetos/[slug].astro` renders one page per `.md` (slug = entry `id`). `src/pages/projetos/index.astro` lists all projects with a client-side technology filter (synced to `?tec=`; hidden without JS, so every project still shows). Shared helpers (sorting, URLs, tech keys) are in `src/lib/projetos.ts`. Tech keys are case-insensitive. The Markdown body is styled with `@tailwindcss/typography` (`prose`).

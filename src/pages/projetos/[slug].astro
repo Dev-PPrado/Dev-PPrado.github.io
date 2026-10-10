@@ -16,7 +16,7 @@ const { data } = projeto;
 const { Content } = await render(projeto);
 ---
 
-<Layout title={`${data.titulo} | Pedro Prado`} description={data.resumo}>
+<Layout title={`${data.titulo} | Pedro Prado`} description={data.resumo} tipo="article">
 	<article class="mx-auto max-w-3xl px-4 py-12">
 		<a
 			href="/projetos/"
@@ -35,7 +35,7 @@ const { Content } = await render(projeto);
 			<p class="mt-4 text-lg leading-relaxed text-slate-600 dark:text-slate-300">{data.resumo}</p>
 			<a
 				href={data.repo}
-				class="mt-6 inline-block rounded-md bg-sky-700 px-4 py-2 text-sm font-medium text-white hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-600 dark:hover:bg-sky-500"
+				class="mt-6 inline-block rounded-md bg-sky-700 px-4 py-2 text-sm font-medium text-white hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
 			>
 				{pt.projetos.repo}
 			</a>

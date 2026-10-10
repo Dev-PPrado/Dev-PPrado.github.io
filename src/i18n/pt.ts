@@ -2,6 +2,8 @@
 export const pt = {
   lang: 'pt-BR',
   locale: 'pt-BR',
+  ogLocale: 'pt_BR',
+  ogImagemAlt: 'Pedro Prado, Data Engineer: da automação industrial para a engenharia de dados.',
   siteTitle: 'Pedro Prado | Data Engineer',
   siteDescription: 'Portfólio de Pedro Prado, Data Engineer: projetos de pipelines de dados, stack e trilha de estudos.',
   skipToContent: 'Pular para o conteúdo',
