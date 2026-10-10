@@ -1,0 +1,22 @@
+---
+// Número de destaque: só valores reais (github_stats.json), já formatados em pt-BR.
+import TechLogo from './TechLogo.astro';
+
+interface Props {
+  label: string;
+  value: string;
+  hint?: string;
+  tech?: string;
+}
+
+const { label, value, hint, tech } = Astro.props;
+---
+
+<div class="pp-card pp-stat">
+	<div class="pp-stat__label">
+		{tech && <TechLogo tech={tech} size={16} decorative />}
+		{label}
+	</div>
+	<div class="pp-stat__value">{value}</div>
+	{hint && <div class="pp-stat__hint">{hint}</div>}
+</div>

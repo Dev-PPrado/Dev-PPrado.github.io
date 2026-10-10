@@ -1,0 +1,37 @@
+---
+// Barras de linguagens: a maior ocupa a trilha inteira, as demais são proporcionais a ela.
+import { pt } from '../i18n/pt';
+import { resolveTech } from '../lib/tech';
+import TechLogo from './TechLogo.astro';
+
+interface Props {
+  title: string;
+  items: { nome: string; percentual: number }[];
+}
+
+const { title, items } = Astro.props;
+const maior = Math.max(1, ...items.map((i) => i.percentual));
+const numero = new Intl.NumberFormat(pt.locale, { maximumFractionDigits: 1 });
+---
+
+<div class="pp-langs">
+	<h3 class="pp-langs__title">{title}</h3>
+	<ul class="pp-langs__list">
+		{
+			items.map((l) => (
+				<li>
+					<div class="pp-langs__row">
+						<span class="pp-langs__name">
+							{resolveTech(l.nome)?.icone && <TechLogo tech={l.nome} size={14} decorative />}
+							{l.nome}
+						</span>
+						<span class="pp-langs__pct">{numero.format(l.percentual)}%</span>
+					</div>
+					<div class="pp-langs__track" aria-hidden="true">
+						<div class="pp-langs__bar" style={`width: ${(l.percentual / maior) * 100}%`} />
+					</div>
+				</li>
+			))
+		}
+	</ul>
+</div>

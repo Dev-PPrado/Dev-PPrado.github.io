@@ -3,47 +3,49 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Section from '../../components/Section.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import TechTag from '../../components/TechTag.astro';
 import { pt } from '../../i18n/pt';
 import { chaveTec, ordenarPorData, tecnologias } from '../../lib/projetos';
 
 const projetos = ordenarPorData(await getCollection('projects'));
 const tecs = tecnologias(projetos);
 const t = pt.projetos.indice;
-
-const botao =
-  'rounded-full border px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 ' +
-  'border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 ' +
-  'aria-pressed:border-sky-700 aria-pressed:bg-sky-700 aria-pressed:text-white';
 ---
 
 <Layout title={`${t.titulo} | Pedro Prado`} description={t.descricao}>
-	<Section id="projetos" nivel="h1" titulo={t.titulo} descricao={t.descricao}>
+	<Section id="projetos" nivel="h1" eyebrow={pt.nav.projetos} titulo={t.titulo} descricao={t.descricao}>
 		<!-- Sem JavaScript o filtro fica escondido e todos os projetos aparecem. -->
 		<div id="filtro" hidden>
 			<h2 id="filtro-titulo" class="sr-only">{t.filtro}</h2>
-			<ul class="flex flex-wrap gap-2" aria-labelledby="filtro-titulo">
-				<li><button type="button" class={botao} data-tec="" aria-pressed="true">{t.todas}</button></li>
-				{tecs.map((tec) => (
-					<li>
-						<button type="button" class={botao} data-tec={tec.chave} aria-pressed="false">
-							{tec.nome} <span class="opacity-75">({tec.total})</span>
-						</button>
-					</li>
-				))}
+			<ul class="pp-taglist" aria-labelledby="filtro-titulo">
+				<li>
+					<TechTag tech={t.todas} as="button" selected logo={false} data-tec="" />
+				</li>
+				{
+					tecs.map((tec) => (
+						<li>
+							<TechTag tech={tec.nome} as="button" data-tec={tec.chave}>
+								{tec.nome}{' '}<span class="opacity-80">({tec.total})</span>
+							</TechTag>
+						</li>
+					))
+				}
 			</ul>
-			<p id="contagem" class="mt-4 text-sm text-slate-500 dark:text-slate-400" aria-live="polite">
+			<p id="contagem" class="pp-mono-sm mt-4" aria-live="polite">
 				{t.contagem(projetos.length)}
 			</p>
 		</div>
 
-		<ul id="lista" class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{projetos.map((projeto) => (
-				<li class="grid" data-tecs={JSON.stringify(projeto.data.stack.map(chaveTec))}>
-					<ProjectCard projeto={projeto} />
-				</li>
-			))}
+		<ul id="lista" class="mt-6 grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
+			{
+				projetos.map((projeto) => (
+					<li class="grid" data-tecs={JSON.stringify(projeto.data.stack.map(chaveTec))}>
+						<ProjectCard projeto={projeto} />
+					</li>
+				))
+			}
 		</ul>
-		<p id="vazio" class="mt-6 text-slate-600 dark:text-slate-300" hidden>{t.vazio}</p>
+		<p id="vazio" class="mt-6 text-ink-muted" hidden>{t.vazio}</p>
 	</Section>
 </Layout>
 

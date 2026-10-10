@@ -3,6 +3,9 @@ import type { CollectionEntry } from 'astro:content';
 import { pt } from '../i18n/pt';
 import { formatMes } from '../lib/format';
 import { urlProjeto } from '../lib/projetos';
+import StatusBadge from './StatusBadge.astro';
+import TechTag from './TechTag.astro';
+import Button from './Button.astro';
 
 interface Props {
   projeto: CollectionEntry<'projects'>;
@@ -10,47 +13,57 @@ interface Props {
 
 const { projeto } = Astro.props;
 const { data } = projeto;
+const url = urlProjeto(projeto);
 ---
 
-<article class="flex flex-col rounded-lg border border-slate-200 p-5 dark:border-slate-800">
-	<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-		<span>{formatMes(data.data)}</span>
-		<span aria-hidden="true">·</span>
-		<span>{pt.projetos.status[data.status]}</span>
+<article class="pp-card pp-card--interactive pp-project h-full">
+	<div class="pp-project__meta">
+		<span class="pp-mono-sm">{formatMes(data.data)}</span>
+		<StatusBadge status={data.status} />
 	</div>
-	<h3 class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">
-		<a href={urlProjeto(projeto)} class="rounded hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-sky-600 dark:hover:text-sky-300">
-			{data.titulo}
-		</a>
-	</h3>
-	<p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{data.resumo}</p>
-	<dl class="mt-4 space-y-3 text-sm">
+	<h3 class="pp-project__title"><a href={url} class="pp-project__link">{data.titulo}</a></h3>
+	<p class="pp-project__summary">{data.resumo}</p>
+	{
+		data.fluxo && (
+			<div class="pp-project__flow" role="group" aria-label={pt.projetos.fluxo}>
+				{data.fluxo.map((etapa, i) => (
+					<>
+						{i > 0 && (
+							<span class="pp-project__flow-sep" aria-hidden="true">
+								→
+							</span>
+						)}
+						<span>{etapa}</span>
+					</>
+				))}
+			</div>
+		)
+	}
+	<dl class="pp-project__dl">
 		<div>
-			<dt class="font-medium text-slate-900 dark:text-white">{pt.projetos.problema}</dt>
-			<dd class="mt-1 text-slate-600 dark:text-slate-300">{data.problema}</dd>
+			<dt>{pt.projetos.problema}</dt>
+			<dd>{data.problema}</dd>
 		</div>
 		<div>
-			<dt class="font-medium text-slate-900 dark:text-white">{pt.projetos.solucao}</dt>
-			<dd class="mt-1 text-slate-600 dark:text-slate-300">{data.solucao}</dd>
+			<dt>{pt.projetos.solucao}</dt>
+			<dd>{data.solucao}</dd>
 		</div>
 	</dl>
-	<ul class="mt-4 flex flex-wrap gap-2" aria-label="Tecnologias">
-		{data.stack.map((tec) => (
-			<li class="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-200">{tec}</li>
-		))}
+	<ul class="pp-taglist" aria-label={pt.projetos.stack}>
+		{
+			data.stack.map((tec) => (
+				<li>
+					<TechTag tech={tec} />
+				</li>
+			))
+		}
 	</ul>
-	<div class="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-5 text-sm font-medium">
-		<a
-			href={urlProjeto(projeto)}
-			class="rounded text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
-		>
-			{pt.projetos.detalhes}<span class="sr-only">: {data.titulo}</span>{' '}<span aria-hidden="true">→</span>
-		</a>
-		<a
-			href={data.repo}
-			class="rounded text-slate-600 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-slate-300"
-		>
-			{pt.projetos.repo}<span class="sr-only">: {data.titulo}</span>
-		</a>
+	<div class="pp-project__actions">
+		<Button href={url} variant="link">
+			{pt.projetos.detalhes}<span class="pp-sr">: {data.titulo}</span>
+		</Button>
+		<Button href={data.repo} variant="ghost" size="sm" tech="github">
+			{pt.projetos.repoCurto}<span class="pp-sr">: {data.titulo}</span>
+		</Button>
 	</div>
 </article>

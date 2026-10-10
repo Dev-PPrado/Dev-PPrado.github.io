@@ -1,0 +1,23 @@
+<!-- @dsCard group="Conteúdo" height=520 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ProjectCard — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:stretch}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'cols'},
+ h(P.ProjectCard,{date:'set. 2026',status:'em desenvolvimento',title:'Pipeline ETL de dados climáticos',href:'#',repo:'#',
+  summary:'Pipeline que coleta dados meteorológicos da API OpenWeatherMap a cada hora, transforma com Pandas e carrega no PostgreSQL, orquestrado pelo Airflow em Docker.',
+  flow:['OpenWeatherMap','extract','transform','load','sp_weather'],
+  problem:'Dados de uma API REST chegam em JSON aninhado e precisam ser coletados periodicamente, padronizados e guardados em um banco para consulta.',
+  stack:['Python','Apache Airflow','Pandas','Parquet','PostgreSQL','Docker']}),
+ h(P.ProjectCard,{date:'set. 2026',status:'em desenvolvimento',title:'Pipeline ETL da PokeAPI',href:'#',repo:'#',
+  summary:'Pipeline em Python que extrai dados da PokeAPI, transforma, valida com Pydantic e carrega em SQLite com SQLAlchemy.',
+  flow:['PokeAPI','extract','transform','schema','load'],
+  solution:'Cada etapa fica em um módulo próprio. Os dados são validados por um schema Pydantic antes da persistência.',
+  stack:['Python','Pydantic','SQLAlchemy','SQLite','pytest','uv']})));
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- @dsCard group="Dados" height=130 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StatTile — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'cols'},
+ h(P.StatTile,{label:'Commits (12 meses)',value:'54',hint:'set. 2026: pico de 43'}),
+ h(P.StatTile,{label:'Repositórios públicos',value:'7',icon:true,tech:'github'}),
+ h(P.StatTile,{label:'Linguagem principal',value:'Python',icon:true,tech:'python',hint:'56,9% do código'})));
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- @dsCard group="IA" height=380 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>PromptCard — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}#root{max-width:560px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(P.PromptCard,{provider:'claude',model:'claude · tool use',meta:['1.2k tokens','840 ms'],caption:'Exemplo ilustrativo: um LLM transformando logs de PLC em dados estruturados.',messages:[
+ {role:'system',text:'Você extrai eventos de falha de logs de PLC e responde só com JSON válido.'},
+ {role:'user',text:'Linha 3 parou às 14:02, falha F-217 no robô de solda, voltou às 14:19.'},
+ {role:'assistant',code:true,text:'{\n  "linha": 3,\n  "codigo": "F-217",\n  "equipamento": "robô de solda",\n  "inicio": "14:02",\n  "fim": "14:19",\n  "duracao_min": 17\n}'}]}));
+</script>
+</body>
+</html>

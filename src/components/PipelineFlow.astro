@@ -1,0 +1,41 @@
+---
+// Etapas do pipeline com conectores e a ferramenta de cada etapa (campo "pipeline" do projeto).
+// Rola na horizontal no mobile. Sem status de execução: o site só mostra o que o código faz.
+import type { CollectionEntry } from 'astro:content';
+import TechLogo from './TechLogo.astro';
+
+interface Props {
+  pipeline: NonNullable<CollectionEntry<'projects'>['data']['pipeline']>;
+}
+
+const { pipeline } = Astro.props;
+---
+
+<figure class="pp-flow">
+	<figcaption class="pp-flow__head">
+		<span class="pp-flow__title font-mono">{pipeline.titulo}</span>
+		{
+			pipeline.agenda && (
+				<span class="pp-mono-sm pp-flow__sched">
+					{pipeline.orquestrador && <TechLogo tech={pipeline.orquestrador} size={14} decorative />}
+					{pipeline.orquestrador && <span class="pp-sr">{pipeline.orquestrador}:</span>}
+					{pipeline.agenda}
+				</span>
+			)
+		}
+	</figcaption>
+	<ol class="pp-flow__list">
+		{
+			pipeline.etapas.map((etapa, i) => (
+				<li class="pp-flow__stage">
+					<span class="pp-flow__step">{String(i + 1).padStart(2, '0')}</span>
+					<span class="pp-flow__name">
+						{etapa.tech && <TechLogo tech={etapa.tech} size={16} decorative />}
+						{etapa.nome}
+					</span>
+					{etapa.detalhe && <span class="pp-flow__detail">{etapa.detalhe}</span>}
+				</li>
+			))
+		}
+	</ol>
+</figure>

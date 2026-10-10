@@ -1,0 +1,13 @@
+<!-- @dsCard group="Ações" height=72 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ThemeToggle — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'row'},h(P.ThemeToggle,null),h('span',{style:{fontSize:14,color:'var(--ink-muted)'}},'Alterna .dark e data-theme no <html> e salva em localStorage.tema')));
+</script>
+</body>
+</html>

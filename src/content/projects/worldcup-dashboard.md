@@ -8,6 +8,7 @@ repo: https://github.com/Dev-PPrado/WorldCup
 data: 2026-10
 destaque: false
 status: em desenvolvimento
+fluxo: [CSVs brutos, limpeza, transformação, dashboard]
 ---
 
 ## Arquitetura

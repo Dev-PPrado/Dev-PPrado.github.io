@@ -1,0 +1,16 @@
+<!-- @dsCard group="Stack" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StackCard — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'cols'},
+ h(P.StackCard,{title:'Linguagens e Python',items:[{tech:'python',name:'Python',status:'projetos'},{tech:'pydantic',name:'Pydantic',status:'projetos'},{tech:'fastapi',name:'FastAPI',status:'projetos'},{tech:'sqlalchemy',name:'SQLAlchemy',status:'projetos'}]}),
+ h(P.StackCard,{title:'Cloud e plataformas',items:[{tech:'databricks',name:'Databricks',status:'estudando',foco:true},{tech:'aws',name:'AWS',status:'próximo',foco:true},{tech:'dbt',name:'dbt',status:'estudando'},{tech:'apachespark',name:'Apache Spark / PySpark',status:'estudando'}]}),
+ h(P.StackCard,{title:'Industrial',items:[{tech:'sqlserver',name:'SQL (SQL Server)',status:'profissional'},{tech:'plc',name:'PLC Rockwell',status:'profissional'},{tech:'mes',name:'MES',status:'profissional'},{tech:'opcua',name:'OPC UA / Kepware',status:'profissional'}]})));
+</script>
+</body>
+</html>

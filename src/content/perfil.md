@@ -2,6 +2,8 @@
 nome: Pedro Prado
 cargo: Data Engineer
 chamada: Engenheiro de Controle e Automação com experiência em sistemas industriais (PLC, MES e SQL Server), em transição estruturada para Engenharia de Dados. Construo pipelines com Python, SQL, Airflow e Docker.
+background: Automação industrial
+principais: [python, sql, airflow, docker]
 github: https://github.com/Dev-PPrado
 linkedin: https://www.linkedin.com/in/pedro-hsprado-dataengineer
 ---

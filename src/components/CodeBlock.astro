@@ -1,0 +1,51 @@
+---
+// Bloco de código com realce de Python feito no build (src/lib/highlight.ts), sem JS no cliente.
+// Painel sempre escuro (code-bg) nos dois temas. Sem botão Copiar: exigiria JS no cliente.
+import TechLogo from './TechLogo.astro';
+import Glyph from './Glyph.astro';
+import { realcar } from '../lib/highlight';
+
+interface Props {
+  code: string;
+  language?: string;
+  filename?: string;
+  highlight?: number[];
+  lineNumbers?: boolean;
+  caption?: string;
+  elevated?: boolean;
+  class?: string;
+}
+
+const {
+  code,
+  language = 'python',
+  filename,
+  highlight = [],
+  lineNumbers = true,
+  caption,
+  elevated = false,
+  class: classe,
+} = Astro.props;
+const linhas = realcar(code.replace(/\n$/, ''), language);
+const logo = language === 'python' || language === 'py' ? 'python' : language === 'sql' ? 'sql' : undefined;
+// Linha vazia precisa de conteúdo para manter a altura.
+const vazio = '​';
+---
+
+<figure class:list={['pp-code', elevated && 'pp-code--elevated', classe]}>
+	{
+		filename && (
+			<div class="pp-code__bar">
+				<span class="pp-code__file">
+					{logo ? <TechLogo tech={logo} size={14} variant="mono" decorative /> : <Glyph name="file" size={14} />}
+					{filename}
+				</span>
+				<span class="pp-code__lang">{language.toUpperCase()}</span>
+			</div>
+		)
+	}
+	<pre class="pp-code__pre" tabindex="0"><code>{linhas.map((linha, i) => (
+		<span class:list={['pp-code__line', highlight.includes(i + 1) && 'is-hl']}>{lineNumbers && <span class="pp-code__ln" aria-hidden="true">{i + 1}</span>}<span class="pp-code__src">{linha.length ? linha.map((t) => (t.classe ? <span class={t.classe}>{t.texto}</span> : t.texto)) : vazio}</span></span>
+	))}</code></pre>
+	{caption && <figcaption class="pp-code__caption">{caption}</figcaption>}
+</figure>

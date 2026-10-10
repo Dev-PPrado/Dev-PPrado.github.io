@@ -1,0 +1,43 @@
+<!-- @dsCard height=320 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Cover</title>
+<style>
+  html,body{margin:0;height:100%;background:var(--surface)}
+  .cv{position:relative;width:960px;height:320px;overflow:hidden;background:var(--surface);font-family:var(--font-sans)}
+  .cv svg{position:absolute;inset:0}
+  .tint{fill:var(--chip)} .ink{fill:var(--ink-strong)} .brand{fill:var(--accent)} .py{fill:var(--code-decorator)} .dot{fill:var(--on-accent)}
+  .col{rx:var(--radius-lg)} .sq{rx:var(--radius-sm)}
+  .txt{position:absolute;left:48px;bottom:40px;max-width:440px}
+  .name{margin:0;font-size:112px;line-height:.95;font-weight:700;letter-spacing:-.035em;color:var(--ink-strong)}
+  .tag{margin:16px 0 0;font-size:14px;line-height:20px;color:var(--ink-muted)}
+</style></head>
+<body>
+<div class="cv">
+  <!--
+    blocks: chip 136x120, ink-strong 136x208, accent 160x340 (bleeds top and bottom), code-decorator 40x40 (Python yellow)
+    arrangement: three columns rising left to right on one baseline, the favicon's bar chart scaled up; the tallest slab bleeds off the top-right edge
+    pattern: a literal motif (the favicon's rising bars), plus a dot grid at space-6 cut into the accent slab in on-accent: data points, technical and precise
+    steps and radii: column gap space-4 (16px), dot pitch space-6 (24px), columns radius-lg, yellow square radius-sm
+  -->
+  <svg width="960" height="320" viewBox="0 0 960 320" aria-hidden="true">
+    <rect class="tint col" x="512" y="200" width="136" height="136"/>
+    <rect class="py sq" x="528" y="216" width="40" height="40"/>
+    <rect class="ink col" x="664" y="112" width="136" height="224"/>
+    <rect class="brand col" x="816" y="-16" width="160" height="352"/>
+    <g class="dot">
+      <circle cx="840" cy="24" r="2"/><circle cx="864" cy="24" r="2"/><circle cx="888" cy="24" r="2"/><circle cx="912" cy="24" r="2"/><circle cx="936" cy="24" r="2"/>
+      <circle cx="840" cy="48" r="2"/><circle cx="864" cy="48" r="2"/><circle cx="888" cy="48" r="2"/><circle cx="912" cy="48" r="2"/><circle cx="936" cy="48" r="2"/>
+      <circle cx="840" cy="72" r="2"/><circle cx="864" cy="72" r="2"/><circle cx="888" cy="72" r="2"/><circle cx="912" cy="72" r="2"/><circle cx="936" cy="72" r="2"/>
+      <circle cx="840" cy="96" r="2"/><circle cx="864" cy="96" r="2"/><circle cx="888" cy="96" r="2"/><circle cx="912" cy="96" r="2"/><circle cx="936" cy="96" r="2"/>
+      <circle cx="840" cy="120" r="2"/><circle cx="864" cy="120" r="2"/><circle cx="888" cy="120" r="2"/><circle cx="912" cy="120" r="2"/><circle cx="936" cy="120" r="2"/>
+      <circle cx="840" cy="144" r="2"/><circle cx="864" cy="144" r="2"/><circle cx="888" cy="144" r="2"/><circle cx="912" cy="144" r="2"/><circle cx="936" cy="144" r="2"/>
+    </g>
+  </svg>
+  <div class="txt">
+    <h1 class="name">Pedro<br>Prado</h1>
+    <p class="tag">Data Engineer: da automação industrial aos pipelines de dados.</p>
+  </div>
+</div>
+</body>
+</html>

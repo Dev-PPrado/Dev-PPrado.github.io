@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
@@ -20,6 +20,47 @@ const projects = defineCollection({
     destaque: z.boolean(),
     status: z.enum(['em desenvolvimento', 'concluído', 'pausado']),
     imagem: z.string().optional(),
+    // Etapas do diagrama mermaid em uma linha, para a faixa de fluxo do card (ex.: [PokeAPI, extract, load]).
+    fluxo: z.array(z.string().min(1)).min(2).optional(),
+    // PipelineFlow da página do projeto. Sem status de execução: só o que o código faz.
+    pipeline: z
+      .object({
+        titulo: z.string().min(1),
+        agenda: z.string().min(1).optional(),
+        orquestrador: z.string().min(1).optional(),
+        etapas: z
+          .array(
+            z.object({
+              nome: z.string().min(1),
+              tech: z.string().min(1).optional(),
+              detalhe: z.string().min(1).optional(),
+            }),
+          )
+          .min(2),
+      })
+      .optional(),
+    // SchemaCards da página do projeto, copiados do código do repositório.
+    schemas: z
+      .array(
+        z.object({
+          tipo: z.enum(['pydantic', 'table', 'dbt']),
+          nome: z.string().min(1),
+          motor: z.string().min(1).optional(),
+          descricao: z.string().min(1).optional(),
+          campos: z
+            .array(
+              z.object({
+                nome: z.string().min(1),
+                tipo: z.string().min(1),
+                pk: z.boolean().default(false),
+                nulo: z.boolean().default(false),
+                regra: z.string().min(1).optional(),
+              }),
+            )
+            .min(1),
+        }),
+      )
+      .optional(),
   }),
 });
 
@@ -65,6 +106,9 @@ const perfil = defineCollection({
     nome: z.string().min(1),
     cargo: z.string().min(1),
     chamada: z.string().min(1),
+    // Usados no painel pedro.py do Hero.
+    background: z.string().min(1),
+    principais: z.array(reference('stack')).min(1),
     github: z.url(),
     linkedin: z.url(),
   }),

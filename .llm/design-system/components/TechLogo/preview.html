@@ -1,0 +1,16 @@
+<!-- @dsCard group="Stack" height=260 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TechLogo — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}.logos{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}.logos figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface-raised)}.logos figcaption{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);text-align:center}.lbl{font-family:var(--font-mono);font-size:11px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'grid'},
+ h('div',{className:'logos'},Object.keys(P.icons).map(function(k){return h('figure',{key:k},h(P.TechLogo,{tech:k,size:28}),h('figcaption',null,P.icons[k].title))})),
+ h('div',{className:'row'},h('span',{className:'lbl'},'mono'),['python','pandas','apacheairflow','docker','databricks','claude'].map(function(k){return h(P.TechLogo,{key:k,tech:k,size:22,variant:'mono'})}),
+   h('span',{className:'lbl'},'monograma'),['aws','dbt','sqlserver','plc','opcua','mes'].map(function(k){return h(P.TechLogo,{key:k,tech:k,size:28})}))));
+</script>
+</body>
+</html>

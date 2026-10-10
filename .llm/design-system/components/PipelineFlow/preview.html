@@ -1,0 +1,21 @@
+<!-- @dsCard group="Engenharia de dados" height=300 subtitle="ETL e medallion" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>PipelineFlow — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'grid',style:{gap:28}},
+ h(P.PipelineFlow,{title:'weather_etl',schedule:'@hourly',orchestrator:'apacheairflow',stages:[
+  {name:'extract',tech:'python',detail:'OpenWeatherMap → JSON',status:'done'},
+  {name:'transform',tech:'pandas',detail:'normaliza → Parquet',status:'running',active:true},
+  {name:'load',tech:'postgresql',detail:'sp_weather',status:'planned'}]}),
+ h(P.PipelineFlow,{title:'Arquitetura medallion',schedule:'Delta Lake',orchestrator:'databricks',stages:[
+  {layer:'bronze',name:'raw_events',detail:'ingestão como chegou'},
+  {layer:'silver',name:'events_clean',detail:'tipado, deduplicado'},
+  {layer:'gold',name:'kpi_producao',detail:'métrica de negócio'}]})));
+</script>
+</body>
+</html>

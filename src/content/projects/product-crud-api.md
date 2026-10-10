@@ -8,6 +8,7 @@ repo: https://github.com/Dev-PPrado/product-crud-api
 data: 2026-09
 destaque: false
 status: em desenvolvimento
+fluxo: [Streamlit, FastAPI, PostgreSQL]
 ---
 
 ## Arquitetura

@@ -1,0 +1,26 @@
+---
+// Glifo de interface (traço 2px, 24px), decorativo: o texto ao lado carrega o significado.
+import { GLYPHS, type GlyphName } from '../lib/glyphs';
+
+interface Props {
+  name: GlyphName;
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 16, class: classe } = Astro.props;
+---
+
+<svg
+	class:list={['pp-glyph', classe]}
+	width={size}
+	height={size}
+	viewBox="0 0 24 24"
+	fill={name === 'star' ? 'currentColor' : 'none'}
+	stroke="currentColor"
+	stroke-width="2"
+	aria-hidden="true"
+>
+	<path d={GLYPHS[name]} stroke-linecap="round" stroke-linejoin="round" />
+	{name === 'sun' && <circle cx="12" cy="12" r="4" />}
+</svg>

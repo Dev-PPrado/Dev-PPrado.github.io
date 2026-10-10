@@ -8,6 +8,7 @@ repo: https://github.com/Dev-PPrado/northwind-sales-analytics
 data: 2026-09
 destaque: true
 status: em desenvolvimento
+fluxo: [northwind.sql, PostgreSQL, relatórios SQL, análises]
 ---
 
 ## Arquitetura

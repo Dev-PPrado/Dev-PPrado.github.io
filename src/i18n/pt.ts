@@ -19,16 +19,31 @@ export const pt = {
   },
   hero: {
     cv: 'Currículo (PDF)',
+    stack: 'Stack principal',
+    // Painel de código gerado de perfil.md e stack.json (ver Hero.astro).
+    arquivo: 'pedro.py',
+    legenda: 'Gerado a partir do perfil e da stack deste site.',
   },
   projetos: {
     titulo: 'Projetos em destaque',
     problema: 'Problema',
     solucao: 'Solução',
     repo: 'Ver repositório',
+    repoCurto: 'Repositório',
+    fluxo: 'Fluxo do pipeline',
     detalhes: 'Ver detalhes',
     todos: 'Ver todos os projetos',
     voltar: 'Todos os projetos',
     stack: 'Tecnologias',
+    pipeline: 'Etapas do pipeline',
+    schemas: 'Schemas',
+    schema: {
+      campo: 'Campo',
+      tipo: 'Tipo',
+      regras: 'Regras',
+      pk: ' (chave primária)',
+      tipos: { pydantic: 'BaseModel', table: 'table', dbt: 'model' },
+    },
     indice: {
       titulo: 'Projetos',
       descricao: 'Todos os projetos publicados no meu GitHub. Filtre por tecnologia.',
@@ -81,6 +96,9 @@ export const pt = {
     commits: 'Commits nos últimos 12 meses',
     repositorios: 'Repositórios públicos',
     porMes: 'Commits por mês',
+    pico: (mes: string, commits: number) => `pico: ${commits} em ${mes}`,
+    linguagemPrincipal: 'Linguagem principal',
+    doCodigo: (percentual: string) => `${percentual}% do código`,
     linguagens: 'Linguagens (por volume de código)',
     outras: 'Outras',
     tabela: 'Ver dados em tabela',
@@ -97,6 +115,7 @@ export const pt = {
     contatoTexto: 'O melhor canal para falar comigo é o LinkedIn.',
   },
   rodape: 'Site estático feito com Astro e Tailwind CSS.',
+  legenda: 'Legenda',
 } as const;
 
 export type UiStrings = typeof pt;

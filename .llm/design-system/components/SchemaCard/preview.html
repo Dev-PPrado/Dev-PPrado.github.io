@@ -1,0 +1,17 @@
+<!-- @dsCard group="Engenharia de dados" height=330 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SchemaCard — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;align-items:start}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'cols'},
+ h(P.SchemaCard,{kind:'pydantic',name:'Pokemon',description:'Validação antes da carga: registros inválidos são logados e descartados.',fields:[
+  {name:'id',type:'int',pk:true,rule:'gt=0'},{name:'name',type:'str',rule:'min_length=1'},{name:'base_experience',type:'int',nullable:true,rule:'gt=0'},{name:'types',type:'list[str]',rule:'1–2 itens'}]}),
+ h(P.SchemaCard,{kind:'table',name:'sp_weather',layer:'silver',fields:[
+  {name:'collected_at',type:'timestamptz',pk:true,rule:'UTC'},{name:'temp_c',type:'numeric(5,2)',rule:'−50 a 60'},{name:'humidity',type:'smallint',rule:'0–100'},{name:'description',type:'text',nullable:true}]})));
+</script>
+</body>
+</html>

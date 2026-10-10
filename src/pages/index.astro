@@ -7,6 +7,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 import StackPanel from '../components/StackPanel.astro';
 import Timeline from '../components/Timeline.astro';
 import ActivityChart from '../components/ActivityChart.astro';
+import Button from '../components/Button.astro';
 import { githubStats } from '../lib/github-stats';
 import { pt } from '../i18n/pt';
 import { ordenarPorData } from '../lib/projetos';
@@ -23,40 +24,41 @@ const roadmap = await getCollection('roadmap');
 <Layout>
 	<Hero perfil={perfil.data} />
 
-	<Section id="projetos" titulo={pt.projetos.titulo}>
-		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+	<Section id="projetos" eyebrow={pt.nav.projetos} indice={1} titulo={pt.projetos.titulo}>
+		<Button slot="acao" href="/projetos/" variant="link">{pt.projetos.todos}</Button>
+		<div class="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{destaques.map((projeto) => <ProjectCard projeto={projeto} />)}
 		</div>
-		<a
-			href="/projetos/"
-			class="mt-8 inline-block rounded text-sm font-medium text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
-		>
-			{pt.projetos.todos} <span aria-hidden="true">→</span>
-		</a>
 	</Section>
 
-	<Section id="stack" titulo={pt.stack.titulo} descricao={pt.stack.descricao}>
+	<Section id="stack" eyebrow={pt.nav.stack} indice={2} titulo={pt.stack.titulo} descricao={pt.stack.descricao}>
 		<StackPanel itens={stack} />
 	</Section>
 
-	<Section id="evolucao" titulo={pt.evolucao.titulo} descricao={pt.evolucao.descricao}>
+	<Section id="evolucao" eyebrow={pt.nav.evolucao} indice={3} titulo={pt.evolucao.titulo} descricao={pt.evolucao.descricao}>
 		<Timeline etapas={roadmap} />
 	</Section>
 
-	<Section id="atividade" titulo={pt.atividade.titulo} descricao={pt.atividade.descricao}>
+	<Section
+		id="atividade"
+		eyebrow={pt.nav.atividade}
+		indice={4}
+		titulo={pt.atividade.titulo}
+		descricao={pt.atividade.descricao}
+	>
 		<ActivityChart stats={githubStats} />
 	</Section>
 
-	<Section id="sobre" titulo={pt.sobre.titulo}>
-		<div class="max-w-2xl space-y-4 leading-relaxed text-slate-700 dark:text-slate-300">
+	<Section id="sobre" eyebrow={pt.nav.sobre} indice={5} titulo={pt.sobre.titulo}>
+		<div class="max-w-2xl space-y-4 leading-relaxed text-ink">
 			<Sobre />
 		</div>
-		<h3 class="mt-8 font-semibold text-slate-900 dark:text-white">{pt.sobre.contato}</h3>
-		<p class="mt-2 text-slate-600 dark:text-slate-300">
+		<h3 class="mt-8 font-semibold text-ink-strong">{pt.sobre.contato}</h3>
+		<p class="mt-2 text-ink-muted">
 			{pt.sobre.contatoTexto}{' '}
 			<a
 				href={perfil.data.linkedin}
-				class="rounded font-medium text-sky-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
+				class="rounded-sm font-medium text-accent-ink underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
 			>
 				LinkedIn
 			</a>

@@ -1,0 +1,25 @@
+---
+// Botão/link de ação do design system. primary no máximo uma vez por bloco; link para "Ver detalhes →".
+import TechLogo from './TechLogo.astro';
+import Glyph from './Glyph.astro';
+import type { GlyphName } from '../lib/glyphs';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
+  size?: 'md' | 'sm';
+  tech?: string;
+  icon?: GlyphName;
+  external?: boolean;
+  class?: string;
+}
+
+const { href, variant = 'secondary', size = 'md', tech, icon, external = false, class: classe } = Astro.props;
+const alvo = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+<a href={href} class:list={['pp-btn', `pp-btn--${variant}`, `pp-btn--${size}`, classe]} {...alvo}>
+	{tech ? <TechLogo tech={tech} size={16} variant="mono" decorative /> : icon && <Glyph name={icon} />}
+	<span><slot /></span>
+	{variant === 'link' && <span aria-hidden="true" class="pp-btn__arrow">→</span>}
+</a>

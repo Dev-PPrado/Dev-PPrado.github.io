@@ -1,0 +1,50 @@
+---
+// Card de schema (modelo Pydantic, tabela SQL ou modelo dbt), com campos copiados do repositório.
+import type { CollectionEntry } from 'astro:content';
+import { pt } from '../i18n/pt';
+import TechLogo from './TechLogo.astro';
+import Glyph from './Glyph.astro';
+
+interface Props {
+  schema: NonNullable<CollectionEntry<'projects'>['data']['schemas']>[number];
+}
+
+const { schema } = Astro.props;
+const t = pt.projetos.schema;
+const logo = schema.tipo === 'pydantic' ? 'pydantic' : schema.tipo === 'dbt' ? 'dbt' : (schema.motor ?? 'postgresql');
+---
+
+<section class="pp-card pp-schema" aria-label={schema.nome}>
+	<header class="pp-schema__head">
+		<TechLogo tech={logo} size={18} />
+		<span class="pp-schema__name">{schema.nome}</span>
+		<span class="pp-schema__kind">{t.tipos[schema.tipo]}</span>
+	</header>
+	{schema.descricao && <p class="pp-schema__desc">{schema.descricao}</p>}
+	<div class="overflow-x-auto">
+		<table class="pp-schema__table">
+			<thead>
+				<tr>
+					<th scope="col">{t.campo}</th>
+					<th scope="col">{t.tipo}</th>
+					<th scope="col">{t.regras}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{
+					schema.campos.map((c) => (
+						<tr>
+							<td class="pp-schema__field">
+								{c.pk && <Glyph name="key" size={12} class="pp-schema__pk" />}
+								{c.nome}
+								{c.pk && <span class="pp-sr">{t.pk}</span>}
+							</td>
+							<td class="pp-schema__type">{c.tipo + (c.nulo ? ' | None' : '')}</td>
+							<td class="pp-schema__rule">{c.regra ?? '—'}</td>
+						</tr>
+					))
+				}
+			</tbody>
+		</table>
+	</div>
+</section>
