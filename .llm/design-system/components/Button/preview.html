@@ -1,0 +1,15 @@
+<!-- @dsCard group="Ações" height=96 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Button — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'grid'},
+ h('div',{className:'row'}, h(P.Button,{variant:'primary',href:'#',tech:'github'},'GitHub'), h(P.Button,{href:'#'},'LinkedIn'), h(P.Button,{href:'#',icon:'download'},'Currículo (PDF)')),
+ h('div',{className:'row'}, h(P.Button,{variant:'ghost',size:'sm',tech:'github',href:'#'},'Repositório'), h(P.Button,{variant:'link',href:'#'},'Ver detalhes'), h(P.Button,{variant:'primary',disabled:true},'Desabilitado'))));
+</script>
+</body>
+</html>

@@ -1,19 +1,37 @@
 ---
+// Seção com o SectionHeader do design system: eyebrow (com índice mono 01, 02...), título,
+// descrição e uma ação opcional à direita (slot "acao").
 interface Props {
   id: string;
   titulo: string;
   descricao?: string;
+  eyebrow?: string;
+  indice?: number;
   // h1 quando a seção é o conteúdo principal da página (ex.: /projetos).
   nivel?: 'h1' | 'h2';
 }
 
-const { id, titulo, descricao, nivel: Titulo = 'h2' } = Astro.props;
+const { id, titulo, descricao, eyebrow, indice, nivel: Titulo = 'h2' } = Astro.props;
+const temAcao = Astro.slots.has('acao');
 ---
 
-<section id={id} aria-labelledby={`${id}-titulo`} class="mx-auto max-w-5xl scroll-mt-16 px-4 py-12">
-	<Titulo id={`${id}-titulo`} class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{titulo}</Titulo>
-	{descricao && <p class="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">{descricao}</p>}
-	<div class="mt-6">
+<section id={id} aria-labelledby={`${id}-titulo`} class="mx-auto max-w-[var(--content-max)] scroll-mt-16 px-4 py-12">
+	<header class="pp-sechead">
+		<div>
+			{
+				eyebrow && (
+					<p class="pp-eyebrow">
+						{indice !== undefined && <span class="pp-eyebrow__idx">{String(indice).padStart(2, '0')}</span>}
+						{eyebrow}
+					</p>
+				)
+			}
+			<Titulo id={`${id}-titulo`} class="pp-sechead__title">{titulo}</Titulo>
+			{descricao && <p class="pp-sechead__desc">{descricao}</p>}
+		</div>
+		{temAcao && <slot name="acao" />}
+	</header>
+	<div class="mt-8">
 		<slot />
 	</div>
 </section>

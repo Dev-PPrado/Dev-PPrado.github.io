@@ -1,0 +1,18 @@
+<!-- @dsCard group="Layout" height=560 subtitle="Com painel de código ao lado" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Hero — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}body{padding:0}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+var code="from pydantic import BaseModel\n\n\nclass Engineer(BaseModel):\n    name: str = \"Pedro Prado\"\n    role: str = \"Data Engineer\"\n    background: str = \"Automa\u00e7\u00e3o industrial\"\n    stack: list[str] = [\"Python\", \"SQL\", \"Airflow\", \"Docker\"]\n    next: list[str] = [\"Databricks\", \"AWS\", \"IA\"]\n";
+ReactDOM.createRoot(document.getElementById('root')).render(h(P.Hero,{eyebrow:'Data Engineer',name:'Pedro Prado',
+ tagline:'Engenheiro de Controle e Automação com experiência em sistemas industriais (PLC, MES e SQL Server), em transição estruturada para Engenharia de Dados. Construo pipelines com Python, SQL, Airflow e Docker.',
+ links:[{href:'#',label:'GitHub',tech:'github'},{href:'#',label:'LinkedIn'},{href:'#',label:'Currículo (PDF)',icon:'download'}],
+ stack:['Python','SQL','Apache Airflow','Docker','dbt','Databricks'],
+ aside:h(P.CodeBlock,{filename:'pedro.py',code:code,elevated:true,copy:false})}));
+</script>
+</body>
+</html>

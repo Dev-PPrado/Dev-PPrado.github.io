@@ -1,16 +1,99 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@import "./tokens.css";
+@import "./components.css" layer(components);
 
 /* Tema escuro controlado pela classe .dark no <html> (definida no Layout a partir
    da preferência salva ou do sistema). */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* components.css fica na layer "components": os utilitários do Tailwind (mt-*, gap-*...) podem
+   ajustar um componente pp-* sem !important. */
+
+/* Tokens expostos como utilitários do Tailwind (bg-surface-raised, text-ink-muted, border-border...).
+   "inline" faz o utilitário usar var(--token) direto, então a troca de tema vale sem dark:.
+   Fontes (font-sans, font-mono) e raios (rounded-sm...rounded-xl) já usam os tokens: tokens.css
+   define --font-* e --radius-* com os mesmos nomes do tema do Tailwind, fora de layer. */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+  --color-chip: var(--chip);
+  --color-chip-ink: var(--chip-ink);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ink-strong: var(--ink-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-focus-ring: var(--focus-ring);
+  --color-chart: var(--chart);
+  --color-success-bg: var(--success-bg);
+  --color-success-ink: var(--success-ink);
+  --color-success-dot: var(--success-dot);
+  --color-info-bg: var(--info-bg);
+  --color-info-ink: var(--info-ink);
+  --color-info-dot: var(--info-dot);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-ink: var(--warn-ink);
+  --color-warn-dot: var(--warn-dot);
+  --color-neutral-dot: var(--neutral-dot);
+  --color-danger-ink: var(--danger-ink);
+  --color-layer-bronze: var(--layer-bronze);
+  --color-layer-silver: var(--layer-silver);
+  --color-layer-gold: var(--layer-gold);
+  --color-code-bg: var(--code-bg);
+  --color-code-bar: var(--code-bar);
+  --color-code-line: var(--code-line);
+  --color-code-ink: var(--code-ink);
+  --color-code-muted: var(--code-muted);
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Corpo Markdown das páginas de projeto: a tipografia do plugin usa as cores dos tokens,
+   então funciona nos dois temas sem prose-invert. */
+.prose {
+  --tw-prose-body: var(--ink);
+  --tw-prose-headings: var(--ink-strong);
+  --tw-prose-lead: var(--ink-muted);
+  --tw-prose-links: var(--accent-ink);
+  --tw-prose-bold: var(--ink-strong);
+  --tw-prose-counters: var(--ink-subtle);
+  --tw-prose-bullets: var(--ink-subtle);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--ink-strong);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--ink-subtle);
+  --tw-prose-code: var(--ink-strong);
+  --tw-prose-pre-code: var(--code-ink);
+  --tw-prose-pre-bg: var(--code-bg);
+  --tw-prose-th-borders: var(--border-strong);
+  --tw-prose-td-borders: var(--border);
+}
+.prose :where(h2, h3) {
+  letter-spacing: -0.025em;
+}
+.prose :where(code):not(:where(pre code)) {
+  font-family: var(--font-mono);
 }

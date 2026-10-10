@@ -1,45 +1,74 @@
 ---
+// Abertura da home. O painel pedro.py é gerado de perfil.md e stack.json:
+// "stack" = principais do perfil; "next" = itens com foco ou com status estudando/próximo.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, getEntries, type CollectionEntry } from 'astro:content';
 import { pt } from '../i18n/pt';
+import Button from './Button.astro';
+import TechTag from './TechTag.astro';
+import CodeBlock from './CodeBlock.astro';
 
 interface Props {
   perfil: CollectionEntry<'perfil'>['data'];
 }
 
 const { perfil } = Astro.props;
-// O link do CV só aparece quando public/cv.pdf existir (Fase 5).
+// O link do CV só aparece quando public/cv.pdf existir.
 const temCv = existsSync(join(process.cwd(), 'public', 'cv.pdf'));
 
 const links = [
-  { href: perfil.github, label: 'GitHub' },
+  { href: perfil.github, label: 'GitHub', tech: 'github' },
   { href: perfil.linkedin, label: 'LinkedIn' },
-  ...(temCv ? [{ href: '/cv.pdf', label: pt.hero.cv }] : []),
+  ...(temCv ? [{ href: '/cv.pdf', label: pt.hero.cv, icon: 'download' as const }] : []),
 ];
+
+const principais = (await getEntries(perfil.principais)).map((e) => e.data.nome);
+const proximos = (await getCollection('stack'))
+  .filter(({ data }) => data.foco || data.status === 'estudando' || data.status === 'próximo')
+  .map(({ data }) => data.nome);
+
+const lista = (itens: string[]) => ['[', ...itens.map((i) => `        "${i}",`), '    ]'].join('\n');
+const codigo = [
+  'from pydantic import BaseModel',
+  '',
+  '',
+  'class Engineer(BaseModel):',
+  `    name: str = "${perfil.nome}"`,
+  `    role: str = "${perfil.cargo}"`,
+  `    background: str = "${perfil.background}"`,
+  `    stack: list[str] = ${lista(principais)}`,
+  `    next: list[str] = ${lista(proximos)}`,
+].join('\n');
 ---
 
-<section aria-labelledby="hero-titulo" class="mx-auto max-w-5xl px-4 pt-16 pb-12 sm:pt-24">
-	<p class="text-sm font-semibold tracking-wide text-sky-700 uppercase dark:text-sky-300">{perfil.cargo}</p>
-	<h1 id="hero-titulo" class="mt-2 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
-		{perfil.nome}
-	</h1>
-	<p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">{perfil.chamada}</p>
-	<ul class="mt-8 flex flex-wrap gap-3">
-		{links.map((link, i) => (
-			<li>
-				<a
-					href={link.href}
-					class:list={[
-						'inline-block rounded-md px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600',
-						i === 0
-							? 'bg-sky-700 text-white hover:bg-sky-800'
-							: 'border border-slate-300 text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800',
-					]}
-				>
-					{link.label}
-				</a>
-			</li>
-		))}
-	</ul>
+<section class="pp-hero pp-hero--split" aria-labelledby="hero-titulo">
+	<div class="pp-hero__text">
+		<p class="pp-eyebrow">{perfil.cargo}</p>
+		<h1 id="hero-titulo" class="pp-hero__name">{perfil.nome}</h1>
+		<p class="pp-hero__tagline">{perfil.chamada}</p>
+		<ul class="pp-hero__links">
+			{
+				links.map((link, i) => (
+					<li>
+						<Button href={link.href} variant={i === 0 ? 'primary' : 'secondary'} tech={link.tech} icon={link.icon}>
+							{link.label}
+						</Button>
+					</li>
+				))
+			}
+		</ul>
+		<ul class="pp-taglist pp-hero__stack" aria-label={pt.hero.stack}>
+			{
+				principais.map((t) => (
+					<li>
+						<TechTag tech={t} />
+					</li>
+				))
+			}
+		</ul>
+	</div>
+	<div class="pp-hero__aside">
+		<CodeBlock code={codigo} filename={pt.hero.arquivo} caption={pt.hero.legenda} elevated />
+	</div>
 </section>

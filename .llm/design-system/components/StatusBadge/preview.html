@@ -1,0 +1,15 @@
+<!-- @dsCard group="Status" height=96 subtitle="Stack e roadmap" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StatusBadge — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'grid'},
+ h('div',{className:'row'},['profissional','projetos','estudando','próximo'].map(function(s){return h(P.StatusBadge,{key:s,status:s})})),
+ h('div',{className:'row'},['concluído','em andamento','em desenvolvimento','planejado'].map(function(s){return h(P.StatusBadge,{key:s,status:s})}))));
+</script>
+</body>
+</html>

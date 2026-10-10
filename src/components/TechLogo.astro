@@ -1,0 +1,46 @@
+---
+// Logo de tecnologia em SVG inline (Simple Icons, CC0) ou monograma tipográfico.
+// brand: cor da marca, trocada por ink-strong onde ela some no tema (lowLight/lowDark).
+// mono: currentColor. Techs sem marca (AWS, SQL Server, dbt, PLC, OPC, SCADA, MES...) viram monograma.
+import { resolveTech } from '../lib/tech';
+
+interface Props {
+  tech: string;
+  size?: number;
+  variant?: 'brand' | 'mono';
+  decorative?: boolean;
+  class?: string;
+}
+
+const { tech, size = 24, variant = 'brand', decorative = false, class: classe } = Astro.props;
+const r = resolveTech(tech);
+const rotulo = r?.title ?? tech;
+const mono = r?.mono ?? tech.slice(0, 3);
+const estiloSvg =
+  r?.icone && variant === 'brand'
+    ? `width:${size}px;height:${size}px;--logo-l:${r.icone.lowLight ? 'var(--ink-strong)' : r.icone.hex};--logo-d:${r.icone.lowDark ? 'var(--ink-strong)' : r.icone.hex}`
+    : `width:${size}px;height:${size}px`;
+const fonteMono = Math.max(7, Math.round(size * (mono.length > 3 ? 0.28 : 0.34)));
+---
+
+{
+	r?.icone ? (
+		<svg class:list={['pp-logo', `pp-logo--${variant}`, classe]} viewBox="0 0 24 24" style={estiloSvg}
+			aria-hidden={decorative ? 'true' : undefined}
+			role={decorative ? undefined : 'img'}
+			aria-label={decorative ? undefined : rotulo}
+		>
+			<path d={r.icone.path} fill="currentColor" />
+		</svg>
+	) : (
+		<span
+			class:list={['pp-logo', 'pp-logo--monogram', classe]}
+			style={`width:${size}px;height:${size}px;font-size:${fonteMono}px`}
+			aria-hidden={decorative ? 'true' : undefined}
+			role={decorative ? undefined : 'img'}
+			aria-label={decorative ? undefined : rotulo}
+		>
+			{mono}
+		</span>
+	)
+}

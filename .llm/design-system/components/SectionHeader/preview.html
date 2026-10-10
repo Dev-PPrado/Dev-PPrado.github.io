@@ -1,0 +1,13 @@
+<!-- @dsCard group="Layout" height=120 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SectionHeader — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(P.SectionHeader,{eyebrow:'Projetos',index:'01',title:'Projetos em destaque',description:'Pipelines, APIs e análises publicados no meu GitHub.',action:h(P.Button,{variant:'link',href:'#'},'Ver todos os projetos')}));
+</script>
+</body>
+</html>

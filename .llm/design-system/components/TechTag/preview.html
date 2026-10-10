@@ -1,0 +1,17 @@
+<!-- @dsCard group="Stack" height=96 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TechTag — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+function Demo(){var s=React.useState('Python'),sel=s[0],set=s[1];
+return h('div',{className:'grid'},
+ h('ul',{className:'pp-taglist'},['Python','Apache Airflow','Pandas','Parquet','PostgreSQL','Docker','SQLAlchemy'].map(function(t){return h('li',{key:t},h(P.TechTag,{tech:t}))})),
+ h('div',{className:'row'},h('span',{style:{fontSize:13,color:'var(--ink-muted)'}},'Filtro:'),['Python','SQL','Docker','dbt'].map(function(t){return h(P.TechTag,{key:t,tech:t,selected:sel===t,onClick:function(){set(t)}})})));}
+ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));
+</script>
+</body>
+</html>

@@ -1,21 +1,35 @@
 ---
-// Cores por status, com contraste AA nos dois temas.
-const cores = {
-  profissional: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-100',
-  projetos: 'bg-sky-100 text-sky-900 dark:bg-sky-900/50 dark:text-sky-100',
-  estudando: 'bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-100',
-  próximo: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
-  concluído: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-100',
-  'em andamento': 'bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-100',
-  planejado: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
+// Pílula de status: ponto + palavra (a cor nunca carrega o significado sozinha).
+import { pt } from '../i18n/pt';
+
+const tons = {
+  profissional: 'success',
+  projetos: 'info',
+  estudando: 'warn',
+  próximo: 'neutral',
+  concluído: 'success',
+  'em andamento': 'warn',
+  'em desenvolvimento': 'info',
+  planejado: 'neutral',
+  pausado: 'neutral',
 } as const;
 
+const rotulos: Record<keyof typeof tons, string> = {
+  ...pt.stack.status,
+  ...pt.evolucao.status,
+  ...pt.projetos.status,
+};
+
+export type Status = keyof typeof tons;
+
 interface Props {
-  status: keyof typeof cores;
-  label: string;
+  status: Status;
+  class?: string;
 }
 
-const { status, label } = Astro.props;
+const { status, class: classe } = Astro.props;
 ---
 
-<span class:list={['inline-block rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap', cores[status]]}>{label}</span>
+<span class:list={['pp-badge', `pp-badge--${tons[status]}`, classe]}>
+	<span class="pp-badge__dot" aria-hidden="true"></span>{rotulos[status]}
+</span>

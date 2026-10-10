@@ -1,0 +1,14 @@
+<!-- @dsCard group="Código" height=470 subtitle="Python com realce de sintaxe" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>CodeBlock — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+var code="from datetime import datetime\n\nimport pandas as pd\nfrom airflow.decorators import dag, task\n\n\n@dag(schedule=\"@hourly\", start_date=datetime(2026, 9, 1), catchup=False)\ndef weather_etl():\n    @task\n    def transform(raw: dict) -> str:\n        \"\"\"Normaliza o JSON da API e grava em Parquet.\"\"\"\n        df = pd.json_normalize(raw[\"list\"])\n        df[\"temp_c\"] = df[\"main.temp\"] - 273.15\n        path = f\"data/silver/weather_{raw['dt']}.parquet\"\n        df.to_parquet(path, index=False)\n        return path\n\n    transform(extract())\n\n\nweather_etl()\n";
+ReactDOM.createRoot(document.getElementById('root')).render(h(P.CodeBlock,{filename:'dags/weather_etl.py',code:code,highlight:[13,14],caption:'Airflow TaskFlow API — trecho ilustrativo do pipeline de dados climáticos'}));
+</script>
+</body>
+</html>

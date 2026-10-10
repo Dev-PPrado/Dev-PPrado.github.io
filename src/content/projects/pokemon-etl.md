@@ -8,6 +8,30 @@ repo: https://github.com/Dev-PPrado/Pokemon-ETL-Pipeline
 data: 2026-09
 destaque: true
 status: em desenvolvimento
+fluxo: [PokeAPI, extract, transform, schema, load, SQLite]
+pipeline:
+  titulo: Pokemon ETL
+  etapas:
+    - { nome: extract, tech: Python, detalhe: PokeAPI → JSON }
+    - { nome: transform, tech: Python, detalhe: padroniza os campos }
+    - { nome: schema, tech: Pydantic, detalhe: PokemonSchema }
+    - { nome: load, tech: SQLAlchemy, detalhe: tabela pokemons }
+schemas:
+  - tipo: pydantic
+    nome: PokemonSchema
+    descricao: Validação antes da carga (src/schemas/pokemon.py).
+    campos:
+      - { nome: name, tipo: str }
+      - { nome: type, tipo: str }
+  - tipo: table
+    nome: pokemons
+    motor: SQLite
+    descricao: Modelo SQLAlchemy (src/models/pokemon.py).
+    campos:
+      - { nome: id, tipo: Integer, pk: true }
+      - { nome: name, tipo: String }
+      - { nome: type, tipo: String }
+      - { nome: created_at, tipo: DateTime, regra: "default: now()" }
 ---
 
 ## Arquitetura

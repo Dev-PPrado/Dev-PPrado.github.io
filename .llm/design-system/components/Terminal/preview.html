@@ -1,0 +1,21 @@
+<!-- @dsCard group="Código" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Terminal — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(P.Terminal,{title:'Pokemon-ETL-Pipeline',lines:[
+ {type:'cmd',text:'uv run pytest -q'},
+ {type:'out',text:'tests/test_load.py .                                   [100%]'},
+ {type:'ok',text:'1 passed in 0.42s'},
+ {type:'cmd',text:'uv run python -m src.main'},
+ {type:'info',text:'INFO  extract  151 registros recebidos da PokeAPI'},
+ {type:'info',text:'INFO  schema   150 válidos · 1 rejeitado'},
+ {type:'err',text:'WARN  schema   id=0: base_experience deve ser > 0'},
+ {type:'ok',text:'load concluído: 150 linhas em pokemon.db'}]}));
+</script>
+</body>
+</html>

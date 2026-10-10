@@ -8,6 +8,26 @@ repo: https://github.com/Dev-PPrado/weather_data_pipeline_ETL
 data: 2026-09
 destaque: true
 status: em desenvolvimento
+fluxo: [OpenWeatherMap, extract, transform, load, sp_weather]
+pipeline:
+  titulo: weather_pipeline
+  agenda: "0 * * * * (a cada hora)"
+  orquestrador: Apache Airflow
+  etapas:
+    - { nome: extract, tech: Python, detalhe: OpenWeatherMap → JSON bruto }
+    - { nome: transform, tech: Pandas, detalhe: normaliza → Parquet }
+    - { nome: load, tech: PostgreSQL, detalhe: append em sp_weather }
+schemas:
+  - tipo: table
+    nome: sp_weather
+    motor: PostgreSQL
+    descricao: Algumas colunas da tabela. Ela é criada pelo pandas (to_sql, modo append), então os tipos são os inferidos por ele.
+    campos:
+      - { nome: datetime, tipo: timestamptz, regra: fuso America/Sao_Paulo }
+      - { nome: city_name, tipo: text }
+      - { nome: temperature, tipo: double precision, regra: °C (units=metric) }
+      - { nome: humidity, tipo: bigint, regra: "%" }
+      - { nome: weather_description, tipo: text }
 ---
 
 ## Arquitetura

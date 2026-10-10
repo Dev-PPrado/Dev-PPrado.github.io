@@ -1,0 +1,14 @@
+<!-- @dsCard group="Dados" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ActivityChart — preview</title>
+<style>body{margin:0;padding:20px;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.grid{display:grid;gap:16px}#root{max-width:560px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Prado, h = React.createElement;
+var m=[['nov','2025',0],['dez','',0],['jan','2026',0],['fev','',0],['mar','',0],['abr','',0],['mai','',0],['jun','',0],['jul','',0],['ago','',2],['set','',43],['out','',9]].map(function(x){return {label:x[0],year:x[1],commits:x[2]}});
+ReactDOM.createRoot(document.getElementById('root')).render(h(P.ActivityChart,{title:'Commits por mês',months:m}));
+</script>
+</body>
+</html>

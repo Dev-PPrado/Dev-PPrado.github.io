@@ -1,0 +1,29 @@
+---
+// Chip de tecnologia em mono com mini-logo. Com href vira link; com as="button", botão de filtro
+// (o estado vem de aria-pressed, ver components.css). Atributos extras (data-*) passam adiante.
+import TechLogo from './TechLogo.astro';
+import { resolveTech } from '../lib/tech';
+
+interface Props {
+  tech: string;
+  href?: string;
+  as?: 'span' | 'a' | 'button';
+  selected?: boolean;
+  logo?: boolean;
+  class?: string;
+  [atributo: `data-${string}`]: string | undefined;
+}
+
+const { tech, href, as, selected = false, logo, class: classe, ...resto } = Astro.props;
+const Tag = as ?? (href ? 'a' : 'span');
+const interativo = Tag !== 'span';
+// Sem logo conhecido não há monograma inventado: só o nome.
+const mostrarLogo = logo ?? resolveTech(tech) !== null;
+const extras: Record<string, string | undefined> =
+  Tag === 'button' ? { type: 'button', 'aria-pressed': String(selected) } : Tag === 'a' ? { href } : {};
+---
+
+<Tag class:list={['pp-tag', interativo && 'is-interactive', classe]} {...extras} {...resto}>
+	{mostrarLogo && <TechLogo tech={tech} size={14} decorative />}
+	<span><slot>{tech}</slot></span>
+</Tag>

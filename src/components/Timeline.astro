@@ -2,7 +2,10 @@
 import type { CollectionEntry } from 'astro:content';
 import { pt } from '../i18n/pt';
 import { formatMes } from '../lib/format';
+import { resolveTech } from '../lib/tech';
 import StatusBadge from './StatusBadge.astro';
+import TechTag from './TechTag.astro';
+import Button from './Button.astro';
 
 type Etapa = CollectionEntry<'roadmap'>['data'];
 
@@ -26,39 +29,39 @@ function periodo(e: Etapa): string {
   return pt.evolucao.semData;
 }
 
-const corPonto = {
-  concluído: 'bg-emerald-600',
-  'em andamento': 'bg-amber-500',
-  planejado: 'bg-slate-400',
-} as const;
+const ponto = { concluído: 'success', 'em andamento': 'warn', planejado: 'neutral' } as const;
+// Na linha do tempo só aparecem logos reais (Simple Icons), sem monogramas.
+const temLogo = (t: string) => resolveTech(t)?.icone !== undefined;
 ---
 
-<ol class="relative space-y-8 border-l border-slate-200 pl-6 dark:border-slate-800">
-	{etapas.map(({ data }) => (
-		<li class="relative">
-			<span
-				aria-hidden="true"
-				class:list={[
-					'absolute top-1.5 -left-[1.95rem] h-3 w-3 rounded-full ring-4 ring-white dark:ring-slate-950',
-					corPonto[data.status],
-				]}
-			/>
-			<div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-				<p class="text-xs text-slate-500 dark:text-slate-400">{periodo(data)}</p>
-				<StatusBadge status={data.status} label={pt.evolucao.status[data.status]} />
-			</div>
-			<h3 class="mt-1 font-semibold text-slate-900 dark:text-white">{data.titulo}</h3>
-			{data.itens.length > 0 && (
-				<p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{data.itens.join(' · ')}</p>
-			)}
-			{data.link && (
-				<a
-					href={data.link}
-					class="mt-2 inline-block rounded text-sm font-medium text-sky-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-sky-600 dark:text-sky-300"
-				>
-					{pt.evolucao.certificado}<span class="sr-only">: {data.titulo}</span>
-				</a>
-			)}
-		</li>
-	))}
+<ol class="pp-timeline">
+	{
+		etapas.map(({ data }) => (
+			<li class="pp-timeline__item">
+				<span class:list={['pp-timeline__dot', `pp-dot--${ponto[data.status]}`]} aria-hidden="true" />
+				<div class="pp-timeline__meta">
+					<span class="pp-mono-sm">{periodo(data)}</span>
+					<StatusBadge status={data.status} />
+				</div>
+				<h3 class="pp-timeline__title">{data.titulo}</h3>
+				{data.itens.length > 0 && (
+					<ul class="pp-taglist pp-taglist--tight" aria-label={pt.projetos.stack}>
+						{data.itens.map((t) => (
+							<li>
+								<TechTag tech={t} logo={temLogo(t)} />
+							</li>
+						))}
+					</ul>
+				)}
+				{data.link && (
+					<div class="pp-timeline__link">
+						<Button href={data.link} variant="link">
+							{pt.evolucao.certificado}
+							<span class="pp-sr">: {data.titulo}</span>
+						</Button>
+					</div>
+				)}
+			</li>
+		))
+	}
 </ol>
