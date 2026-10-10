@@ -1,8 +1,8 @@
 {
-  "coletado_em": "2026-10-10T00:15:25Z",
+  "coletado_em": "2026-10-10T00:18:34Z",
   "usuario": "Dev-PPrado",
   "repositorios": 7,
-  "total_commits": 53,
+  "total_commits": 54,
   "commits_por_mes": [
     {
       "mes": "2025-11",
@@ -50,29 +50,29 @@
     },
     {
       "mes": "2026-10",
-      "commits": 8
+      "commits": 9
     }
   ],
   "linguagens": [
     {
       "nome": "Python",
-      "bytes": 56986,
-      "percentual": 54.7
+      "bytes": 62519,
+      "percentual": 56.9
     },
     {
       "nome": "Astro",
       "bytes": 28834,
-      "percentual": 27.7
+      "percentual": 26.3
     },
     {
       "nome": "TypeScript",
       "bytes": 10636,
-      "percentual": 10.2
+      "percentual": 9.7
     },
     {
       "nome": "Jupyter Notebook",
       "bytes": 6285,
-      "percentual": 6.0
+      "percentual": 5.7
     },
     {
       "nome": "Dockerfile",
