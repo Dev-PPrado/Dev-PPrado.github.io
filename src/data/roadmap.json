@@ -39,6 +39,12 @@
     "link": "https://suajornadadedados.curseduca.pro/verify/ecac5ead05113b6a19187e8ac293d22bd7145e74"
   },
   {
+    "id": "projeto-dbt-airflow-cosmos",
+    "titulo": "Projeto dbt + Airflow com Astronomer Cosmos",
+    "itens": ["dbt", "Apache Airflow", "Astronomer Cosmos"],
+    "status": "planejado"
+  },
+  {
     "id": "modelagem-e-governanca",
     "titulo": "Modelagem, bancos e governança",
     "itens": ["Modelagem de dados", "Bancos relacionais e NoSQL", "Governança de dados"],
