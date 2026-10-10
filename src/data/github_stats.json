@@ -1,8 +1,8 @@
 {
-  "coletado_em": "2026-10-09T23:50:03Z",
+  "coletado_em": "2026-10-10T00:15:25Z",
   "usuario": "Dev-PPrado",
   "repositorios": 7,
-  "total_commits": 50,
+  "total_commits": 53,
   "commits_por_mes": [
     {
       "mes": "2025-11",
@@ -50,44 +50,44 @@
     },
     {
       "mes": "2026-10",
-      "commits": 5
+      "commits": 8
     }
   ],
   "linguagens": [
     {
       "nome": "Python",
-      "bytes": 44691,
-      "percentual": 62.4
+      "bytes": 56986,
+      "percentual": 54.7
     },
     {
       "nome": "Astro",
-      "bytes": 14258,
-      "percentual": 19.9
+      "bytes": 28834,
+      "percentual": 27.7
+    },
+    {
+      "nome": "TypeScript",
+      "bytes": 10636,
+      "percentual": 10.2
     },
     {
       "nome": "Jupyter Notebook",
       "bytes": 6285,
-      "percentual": 8.8
-    },
-    {
-      "nome": "TypeScript",
-      "bytes": 5031,
-      "percentual": 7.0
+      "percentual": 6.0
     },
     {
       "nome": "Dockerfile",
       "bytes": 732,
-      "percentual": 1.0
-    },
-    {
-      "nome": "CSS",
-      "bytes": 321,
-      "percentual": 0.4
+      "percentual": 0.7
     },
     {
       "nome": "JavaScript",
-      "bytes": 252,
+      "bytes": 443,
       "percentual": 0.4
+    },
+    {
+      "nome": "CSS",
+      "bytes": 356,
+      "percentual": 0.3
     }
   ]
 }

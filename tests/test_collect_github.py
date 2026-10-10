@@ -3,12 +3,14 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+import httpx
 import pytest
 from pydantic import ValidationError
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from collect_github import load, transform  # noqa: E402
+import collect_github  # noqa: E402
+from collect_github import buscar_commit_activity, load, transform  # noqa: E402
 
 COLETA = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
 
@@ -103,3 +105,64 @@ def test_load_rejeita_dados_invalidos_e_mantem_o_arquivo(tmp_path: Path):
     with pytest.raises(ValidationError):
         load(dados, destino)
     assert destino.read_text(encoding="utf-8") == '{"anterior": true}\n'
+
+
+HOJE = datetime(2026, 10, 9, tzinfo=UTC).date()  # sexta-feira
+
+
+def cliente_falso(respostas: dict[str, list[httpx.Response]]) -> httpx.Client:
+    """Cliente cujas respostas saem de uma fila por (repo, endpoint); registra as chamadas."""
+    chamadas: dict[str, int] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        partes = request.url.path.split("/")
+        chave = f"{partes[3]}/{partes[-1]}"  # ex.: "lento/commit_activity", "lento/commits"
+        chamadas[chave] = chamadas.get(chave, 0) + 1
+        return respostas[chave].pop(0)
+
+    cliente = httpx.Client(transport=httpx.MockTransport(handler))
+    cliente.chamadas = chamadas  # type: ignore[attr-defined]
+    return cliente
+
+
+def test_202_so_os_pendentes_sao_consultados_de_novo(monkeypatch):
+    esperas: list[float] = []
+    monkeypatch.setattr(collect_github.time, "sleep", esperas.append)
+    semanas = [semana(domingo(2026, 3, 1), [1, 0, 0, 0, 0, 0, 0])]
+    cliente = cliente_falso(
+        {
+            "pronto/commit_activity": [httpx.Response(200, json=semanas)],
+            "vazio/commit_activity": [httpx.Response(204)],
+            "lento/commit_activity": [httpx.Response(202), httpx.Response(202), httpx.Response(200, json=semanas)],
+        }
+    )
+    resultado = buscar_commit_activity(cliente, ["pronto", "vazio", "lento"], HOJE)
+    assert resultado == {"pronto": semanas, "vazio": [], "lento": semanas}
+    assert cliente.chamadas == {"pronto/commit_activity": 1, "vazio/commit_activity": 1, "lento/commit_activity": 3}
+    assert esperas == [5.0, 10.0]
+
+
+def test_202_sem_fim_usa_a_lista_de_commits(monkeypatch):
+    esperas: list[float] = []
+    monkeypatch.setattr(collect_github.time, "sleep", esperas.append)
+    total = collect_github.TENTATIVAS_202 + 1
+    commits = [
+        {"commit": {"author": {"date": "2026-10-09T23:56:45Z"}}},  # sexta da semana atual
+        {"commit": {"author": {"date": "2026-10-04T10:00:00-03:00"}}},  # domingo da semana atual
+        {"commit": {"author": {"date": "2026-09-30T12:00:00Z"}}},  # quarta da semana anterior
+    ]
+    cliente = cliente_falso(
+        {
+            "lento/commit_activity": [httpx.Response(202) for _ in range(total)],
+            "lento/commits": [httpx.Response(200, json=commits)],
+        }
+    )
+    semanas = buscar_commit_activity(cliente, ["lento"], HOJE)["lento"]
+
+    assert cliente.chamadas == {"lento/commit_activity": total, "lento/commits": 1}
+    assert len(esperas) == collect_github.TENTATIVAS_202  # nenhuma espera depois da última tentativa
+    assert len(semanas) == 52
+    assert semanas[-1] == {"week": domingo(2026, 10, 4), "total": 2, "days": [1, 0, 0, 0, 0, 1, 0]}
+    assert semanas[-2]["days"] == [0, 0, 0, 1, 0, 0, 0]
+    # O plano B alimenta o mesmo transform.
+    assert transform([repo("lento", semanas)], COLETA)["total_commits"] == 3

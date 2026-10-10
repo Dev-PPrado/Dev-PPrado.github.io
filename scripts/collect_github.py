@@ -2,7 +2,8 @@
 
 Pipeline em três etapas:
 - extract: lista os repositórios públicos (sem forks) e busca, para cada um, os commits por
-  semana do último ano (/stats/commit_activity) e os bytes por linguagem (/languages).
+  semana do último ano (/stats/commit_activity, com /commits como plano B) e os bytes por
+  linguagem (/languages).
 - transform: função pura que agrega commits por mês e linguagens por bytes.
 - load: valida o schema e grava o JSON de forma atômica, só se os dados mudaram.
 
@@ -30,9 +31,12 @@ USUARIO = "Dev-PPrado"
 API = "https://api.github.com"
 SAIDA = Path(__file__).resolve().parent.parent / "src" / "data" / "github_stats.json"
 
-# /stats/commit_activity responde 202 enquanto o GitHub calcula a estatística.
-TENTATIVAS_202 = 6
-ESPERA_INICIAL_S = 2.0
+# /stats/commit_activity responde 202 enquanto o GitHub calcula a estatística, e logo depois de
+# um push isso pode durar mais de 15 minutos. Até 5 novas tentativas (5s a 60s, ~2 min no total);
+# o que continuar pendente é contado pela lista de commits (ver contar_commits).
+TENTATIVAS_202 = 5
+ESPERA_INICIAL_S = 5.0
+ESPERA_MAXIMA_S = 60.0
 
 log = logging.getLogger("collect_github")
 
@@ -90,29 +94,84 @@ def listar_repositorios(cliente: httpx.Client) -> list[dict[str, Any]]:
     return [r for r in repos if not r["fork"] and not r["private"]]
 
 
-def buscar_commit_activity(cliente: httpx.Client, repo: str) -> list[dict[str, Any]]:
-    url = f"{API}/repos/{USUARIO}/{repo}/stats/commit_activity"
+def pedir_commit_activity(cliente: httpx.Client, repo: str) -> list[dict[str, Any]] | None:
+    """Commits por semana do último ano, ou None se o GitHub ainda está calculando (202)."""
+    resposta = _get(cliente, f"{API}/repos/{USUARIO}/{repo}/stats/commit_activity")
+    if resposta.status_code == 202:
+        return None
+    if resposta.status_code == 204:  # repositório vazio
+        return []
+    return resposta.json()
+
+
+def contar_commits(cliente: httpx.Client, repo: str, hoje: date) -> list[dict[str, Any]]:
+    """Plano B para o 202: monta o mesmo formato de commit_activity a partir de /commits.
+
+    Cobre as mesmas 52 semanas (domingo a sábado, a última é a atual). Usa a data do autor em
+    UTC, enquanto o GitHub usa o fuso do commit, então um commit perto da meia-noite pode cair
+    no dia vizinho.
+    """
+    domingo_atual = hoje - timedelta(days=(hoje.weekday() + 1) % 7)
+    inicio = domingo_atual - timedelta(weeks=51)
+    semanas = {inicio + timedelta(weeks=i): [0] * 7 for i in range(52)}
+    pagina = 1
+    while True:
+        lote = _get(
+            cliente,
+            f"{API}/repos/{USUARIO}/{repo}/commits",
+            since=f"{inicio.isoformat()}T00:00:00Z",
+            per_page=100,
+            page=pagina,
+        ).json()
+        for item in lote:
+            dia = datetime.fromisoformat(item["commit"]["author"]["date"]).astimezone(UTC).date()
+            domingo = dia - timedelta(days=(dia.weekday() + 1) % 7)
+            if domingo in semanas:
+                semanas[domingo][(dia - domingo).days] += 1
+        if len(lote) < 100:
+            break
+        pagina += 1
+    return [
+        {"week": int(datetime(d.year, d.month, d.day, tzinfo=UTC).timestamp()), "total": sum(dias), "days": dias}
+        for d, dias in semanas.items()
+    ]
+
+
+def buscar_commit_activity(cliente: httpx.Client, repos: list[str], hoje: date) -> dict[str, list[dict[str, Any]]]:
+    # A primeira rodada já dispara o cálculo de todos os repositórios; depois só os pendentes voltam.
+    resultado: dict[str, list[dict[str, Any]]] = {}
+    pendentes = list(repos)
     espera = ESPERA_INICIAL_S
-    for tentativa in range(1, TENTATIVAS_202 + 1):
-        resposta = _get(cliente, url)
-        if resposta.status_code == 204:  # repositório vazio
-            return []
-        if resposta.status_code == 200:
-            return resposta.json()
-        log.info("%s: estatística em cálculo (202), tentativa %d/%d, aguardando %.0fs", repo, tentativa, TENTATIVAS_202, espera)
-        time.sleep(espera)
-        espera *= 2
-    raise RuntimeError(f"{repo}: commit_activity ainda em cálculo após {TENTATIVAS_202} tentativas")
+    for tentativa in range(TENTATIVAS_202 + 1):
+        if tentativa > 0:
+            log.info("Estatística em cálculo (202) para %s; nova tentativa %d/%d em %.0fs", ", ".join(pendentes), tentativa, TENTATIVAS_202, espera)
+            time.sleep(espera)
+            espera = min(espera * 2, ESPERA_MAXIMA_S)
+        ainda_pendentes = []
+        for repo in pendentes:
+            semanas = pedir_commit_activity(cliente, repo)
+            if semanas is None:
+                ainda_pendentes.append(repo)
+            else:
+                resultado[repo] = semanas
+        pendentes = ainda_pendentes
+        if not pendentes:
+            return resultado
+    for repo in pendentes:
+        log.warning("%s: commit_activity ainda em cálculo; contando pela lista de commits", repo)
+        resultado[repo] = contar_commits(cliente, repo, hoje)
+    return resultado
 
 
 def extract(cliente: httpx.Client) -> list[dict[str, Any]]:
+    nomes = [repo["name"] for repo in listar_repositorios(cliente)]
+    atividade = buscar_commit_activity(cliente, nomes, datetime.now(UTC).date())
     brutos = []
-    for repo in listar_repositorios(cliente):
-        nome = repo["name"]
+    for nome in nomes:
         brutos.append(
             {
                 "nome": nome,
-                "commit_activity": buscar_commit_activity(cliente, nome),
+                "commit_activity": atividade[nome],
                 "linguagens": _get(cliente, f"{API}/repos/{USUARIO}/{nome}/languages").json(),
             }
         )
