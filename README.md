@@ -1,4 +1,4 @@
-# Portfólio de Pedro Prado — Data Engineer
+# Portfólio de Pedro Prado — Data & AI Engineer
 
 [![Deploy](https://github.com/Dev-PPrado/Dev-PPrado.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/Dev-PPrado/Dev-PPrado.github.io/actions/workflows/deploy.yml)
 [![Collect GitHub stats](https://github.com/Dev-PPrado/Dev-PPrado.github.io/actions/workflows/collect.yml/badge.svg)](https://github.com/Dev-PPrado/Dev-PPrado.github.io/actions/workflows/collect.yml)

@@ -3,9 +3,9 @@ export const pt = {
   lang: 'pt-BR',
   locale: 'pt-BR',
   ogLocale: 'pt_BR',
-  ogImagemAlt: 'Pedro Prado, Data Engineer: da automação industrial para a engenharia de dados.',
-  siteTitle: 'Pedro Prado | Data Engineer',
-  siteDescription: 'Portfólio de Pedro Prado, Data Engineer: projetos de pipelines de dados, stack e trilha de estudos.',
+  ogImagemAlt: 'Pedro Prado, Data & AI Engineer: da automação industrial para dados e IA.',
+  siteTitle: 'Pedro Prado | Data & AI Engineer',
+  siteDescription: 'Portfólio de Pedro Prado, Data & AI Engineer: projetos de pipelines de dados e aplicações com IA, stack e trilha de estudos.',
   skipToContent: 'Pular para o conteúdo',
   nav: {
     projetos: 'Projetos',
@@ -64,6 +64,7 @@ export const pt = {
     foco: 'foco',
     grupos: {
       linguagens: 'Linguagens',
+      ia: 'Engenharia de IA',
       processamento: 'Processamento e transformação',
       bancos: 'Bancos de dados',
       orquestração: 'Orquestração',
