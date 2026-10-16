@@ -29,6 +29,10 @@ const MONOGRAMS: Record<string, { title: string; mono: string }> = {
   apis: { title: 'APIs', mono: 'API' },
   cicd: { title: 'CI/CD', mono: 'CI' },
   llm: { title: 'LLM', mono: 'LLM' },
+  langgraph: { title: 'LangGraph', mono: 'LG' },
+  qdrant: { title: 'Qdrant', mono: 'Qd' },
+  openai: { title: 'OpenAI', mono: 'OAI' },
+  langfuse: { title: 'Langfuse', mono: 'LF' },
 };
 
 // Nomes usados no site (frontmatter, stack.json, roadmap.json) → slug.
@@ -47,7 +51,8 @@ const ALIASES: Record<string, string> = {
   mes: 'mes', scada: 'scada', 'opc / opc ua / kepware': 'opcua', 'opc ua': 'opcua',
   'plc rockwell (controllogix, studio 5000)': 'plc', 'plc rockwell': 'plc', sqlite: 'sqlite',
   requests: 'requests', pgadmin: 'pgadmin', 'apis / web services': 'apis', apis: 'apis',
-  'ci/cd': 'cicd', llm: 'llm',
+  'ci/cd': 'cicd', llm: 'llm', langgraph: 'langgraph', qdrant: 'qdrant', openai: 'openai',
+  'openai api': 'openai', langfuse: 'langfuse',
 };
 
 export type Tech =

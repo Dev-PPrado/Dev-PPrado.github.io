@@ -70,7 +70,7 @@ const stack = defineCollection({
   loader: file('src/data/stack.json'),
   schema: z.object({
     nome: z.string().min(1),
-    grupo: z.enum(['linguagens', 'processamento', 'bancos', 'orquestração', 'infraestrutura', 'cloud', 'industrial']),
+    grupo: z.enum(['linguagens', 'ia', 'processamento', 'bancos', 'orquestração', 'infraestrutura', 'cloud', 'industrial']),
     status: z.enum(['profissional', 'projetos', 'estudando', 'próximo']),
     foco: z.boolean().default(false),
   }),
