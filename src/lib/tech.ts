@@ -29,8 +29,6 @@ const MONOGRAMS: Record<string, { title: string; mono: string }> = {
   apis: { title: 'APIs', mono: 'API' },
   cicd: { title: 'CI/CD', mono: 'CI' },
   llm: { title: 'LLM', mono: 'LLM' },
-  langgraph: { title: 'LangGraph', mono: 'LG' },
-  qdrant: { title: 'Qdrant', mono: 'Qd' },
   openai: { title: 'OpenAI', mono: 'OAI' },
   langfuse: { title: 'Langfuse', mono: 'LF' },
 };
