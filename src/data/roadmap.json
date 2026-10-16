@@ -39,6 +39,13 @@
     "link": "https://suajornadadedados.curseduca.pro/verify/ecac5ead05113b6a19187e8ac293d22bd7145e74"
   },
   {
+    "id": "trilha-engenharia-ia",
+    "titulo": "Trilha Engenharia de IA (Jornada de Dados)",
+    "itens": ["Fundamentos de LLMs", "RAG", "Agentes de IA", "OCR", "Fine-tuning"],
+    "status": "em andamento",
+    "inicio": "2026-10"
+  },
+  {
     "id": "projeto-dbt-airflow-cosmos",
     "titulo": "Projeto dbt + Airflow com Astronomer Cosmos",
     "itens": ["dbt", "Apache Airflow", "Astronomer Cosmos"],
